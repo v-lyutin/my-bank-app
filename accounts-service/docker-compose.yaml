@@ -1,0 +1,9 @@
+services:
+  accounts-db:
+    image: ${POSTGRESQL_IMAGE:-postgres:17.6-alpine3.22}
+    ports:
+      - "${ACCOUNTS_DB_PORT:-5434}:5432"
+    environment:
+      POSTGRES_USER: ${ACCOUNTS_DB_USER:-admin}
+      POSTGRES_PASSWORD: ${ACCOUNTS_DB_PASSWORD:-password}
+      POSTGRES_DB: ${ACCOUNTS_DB_NAME:-accounts}

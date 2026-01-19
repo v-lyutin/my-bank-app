@@ -4,10 +4,10 @@ plugins {
 	id("io.spring.dependency-management") version "1.1.7" apply false
 }
 
-group = "com.amit.mybankapp"
-version = "0.0.1"
-
 subprojects {
+
+	group = "com.amit.mybankapp"
+	version = "0.0.1"
 
 	apply(plugin = "java")
 	apply(plugin = "io.spring.dependency-management")
