@@ -1,4 +1,4 @@
-package com.amit.mybankapp.accounts.application.repository;
+package com.amit.mybankapp.accounts.application.wallet.repository;
 
 import com.amit.mybankapp.accounts.domain.customer.vo.CustomerId;
 import com.amit.mybankapp.accounts.domain.wallet.Wallet;

@@ -1,4 +1,4 @@
-package com.amit.mybankapp.accounts.application.exception;
+package com.amit.mybankapp.accounts.application.common.exception;
 
 import com.amit.mybankapp.accounts.domain.customer.vo.CustomerId;
 

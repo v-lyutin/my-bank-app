@@ -1,6 +1,6 @@
 package com.amit.mybankapp.accounts.infrastructure.persistence.wallet;
 
-import com.amit.mybankapp.accounts.application.repository.WalletRepository;
+import com.amit.mybankapp.accounts.application.wallet.repository.WalletRepository;
 import com.amit.mybankapp.accounts.domain.customer.vo.CustomerId;
 import com.amit.mybankapp.accounts.domain.wallet.Wallet;
 import com.amit.mybankapp.accounts.infrastructure.persistence.wallet.mapper.WalletRowMapper;

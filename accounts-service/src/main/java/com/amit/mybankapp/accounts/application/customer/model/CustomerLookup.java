@@ -1,4 +1,4 @@
-package com.amit.mybankapp.accounts.application.model;
+package com.amit.mybankapp.accounts.application.customer.model;
 
 import java.util.UUID;
 

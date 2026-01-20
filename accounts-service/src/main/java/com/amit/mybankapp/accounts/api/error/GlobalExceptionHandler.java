@@ -2,7 +2,8 @@ package com.amit.mybankapp.accounts.api.error;
 
 import com.amit.mybankapp.accounts.api.error.dto.ApiErrorResponse;
 import com.amit.mybankapp.accounts.api.error.util.ValidationErrorExtractor;
-import com.amit.mybankapp.accounts.application.exception.ResourceNotFoundException;
+import com.amit.mybankapp.accounts.application.common.exception.ResourceNotFoundException;
+import com.amit.mybankapp.accounts.application.transfer.exception.InvalidTransferException;
 import com.amit.mybankapp.accounts.domain.wallet.vo.exception.InsufficientFundsException;
 import com.amit.mybankapp.accounts.domain.customer.vo.exception.InvalidLoginException;
 import com.amit.mybankapp.accounts.domain.wallet.vo.exception.InvalidMoneyException;
@@ -63,6 +64,12 @@ public class GlobalExceptionHandler {
             InvalidLoginException.class
     })
     public ResponseEntity<ApiErrorResponse> handleDomainValidationExceptions(RuntimeException exception, HttpServletRequest request) {
+        ApiErrorResponse apiErrorResponse = new ApiErrorResponse(exception.getMessage(), request.getRequestURI());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiErrorResponse);
+    }
+
+    @ExceptionHandler(value = InvalidTransferException.class)
+    public ResponseEntity<ApiErrorResponse> handleInvalidTransferException(InvalidTransferException exception, HttpServletRequest request) {
         ApiErrorResponse apiErrorResponse = new ApiErrorResponse(exception.getMessage(), request.getRequestURI());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiErrorResponse);
     }

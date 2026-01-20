@@ -4,7 +4,7 @@ import com.amit.mybankapp.accounts.api.customer.dto.request.UpdateProfileRequest
 import com.amit.mybankapp.accounts.api.customer.dto.response.CustomerLookupResponse;
 import com.amit.mybankapp.accounts.api.customer.dto.response.CustomerResponse;
 import com.amit.mybankapp.accounts.api.customer.mapper.CustomerMapper;
-import com.amit.mybankapp.accounts.application.CustomerUseCase;
+import com.amit.mybankapp.accounts.application.customer.CustomerUseCase;
 import com.amit.mybankapp.accounts.domain.customer.Customer;
 import com.amit.mybankapp.accounts.domain.customer.vo.Profile;
 import jakarta.validation.Valid;

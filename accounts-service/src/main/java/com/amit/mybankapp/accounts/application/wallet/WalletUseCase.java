@@ -1,7 +1,7 @@
-package com.amit.mybankapp.accounts.application;
+package com.amit.mybankapp.accounts.application.wallet;
 
-import com.amit.mybankapp.accounts.application.exception.ResourceNotFoundException;
-import com.amit.mybankapp.accounts.application.repository.WalletRepository;
+import com.amit.mybankapp.accounts.application.common.exception.ResourceNotFoundException;
+import com.amit.mybankapp.accounts.application.wallet.repository.WalletRepository;
 import com.amit.mybankapp.accounts.domain.customer.vo.CustomerId;
 import com.amit.mybankapp.accounts.domain.wallet.Wallet;
 import com.amit.mybankapp.accounts.domain.wallet.vo.Money;
@@ -37,13 +37,6 @@ public class WalletUseCase {
         wallet.withdraw(amount);
         this.walletRepository.updateBalance(wallet);
         return wallet;
-    }
-
-    @Transactional(readOnly = true)
-    public Wallet getPrimaryWalletForCurrentUser() {
-        CustomerId customerId = this.currentUserProvider.currentUserId();
-        return this.walletRepository.findPrimaryByCustomerId(customerId)
-                .orElseThrow(() -> ResourceNotFoundException.forWalletOfCustomer(customerId));
     }
 
     @Transactional

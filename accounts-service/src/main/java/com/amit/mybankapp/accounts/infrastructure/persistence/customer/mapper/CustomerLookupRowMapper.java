@@ -1,6 +1,6 @@
 package com.amit.mybankapp.accounts.infrastructure.persistence.customer.mapper;
 
-import com.amit.mybankapp.accounts.application.model.CustomerLookup;
+import com.amit.mybankapp.accounts.application.customer.model.CustomerLookup;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;

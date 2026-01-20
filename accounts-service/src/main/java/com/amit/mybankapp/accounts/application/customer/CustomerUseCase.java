@@ -1,8 +1,8 @@
-package com.amit.mybankapp.accounts.application;
+package com.amit.mybankapp.accounts.application.customer;
 
-import com.amit.mybankapp.accounts.application.exception.ResourceNotFoundException;
-import com.amit.mybankapp.accounts.application.model.CustomerLookup;
-import com.amit.mybankapp.accounts.application.repository.CustomerRepository;
+import com.amit.mybankapp.accounts.application.common.exception.ResourceNotFoundException;
+import com.amit.mybankapp.accounts.application.customer.model.CustomerLookup;
+import com.amit.mybankapp.accounts.application.customer.repository.CustomerRepository;
 import com.amit.mybankapp.accounts.domain.customer.Customer;
 import com.amit.mybankapp.accounts.domain.customer.vo.CustomerId;
 import com.amit.mybankapp.accounts.domain.customer.vo.Profile;

@@ -3,7 +3,7 @@ package com.amit.mybankapp.accounts.api.wallet;
 import com.amit.mybankapp.accounts.api.wallet.dto.request.MoneyOperationRequest;
 import com.amit.mybankapp.accounts.api.wallet.dto.response.WalletResponse;
 import com.amit.mybankapp.accounts.api.wallet.mapper.WalletMapper;
-import com.amit.mybankapp.accounts.application.WalletUseCase;
+import com.amit.mybankapp.accounts.application.wallet.WalletUseCase;
 import com.amit.mybankapp.accounts.domain.wallet.Wallet;
 import com.amit.mybankapp.accounts.domain.wallet.vo.Money;
 import jakarta.validation.Valid;

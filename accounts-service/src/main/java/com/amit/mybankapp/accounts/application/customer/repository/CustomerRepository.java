@@ -1,6 +1,6 @@
-package com.amit.mybankapp.accounts.application.repository;
+package com.amit.mybankapp.accounts.application.customer.repository;
 
-import com.amit.mybankapp.accounts.application.model.CustomerLookup;
+import com.amit.mybankapp.accounts.application.customer.model.CustomerLookup;
 import com.amit.mybankapp.accounts.domain.customer.Customer;
 import com.amit.mybankapp.accounts.domain.customer.vo.CustomerId;
 
