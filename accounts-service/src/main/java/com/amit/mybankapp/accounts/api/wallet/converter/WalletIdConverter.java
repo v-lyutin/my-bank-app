@@ -1,4 +1,4 @@
-package com.amit.mybankapp.accounts.api.converter;
+package com.amit.mybankapp.accounts.api.wallet.converter;
 
 import com.amit.mybankapp.accounts.domain.wallet.vo.WalletId;
 import org.springframework.core.convert.ConversionFailedException;

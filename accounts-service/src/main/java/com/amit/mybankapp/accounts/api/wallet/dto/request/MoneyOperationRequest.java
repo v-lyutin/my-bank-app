@@ -1,4 +1,4 @@
-package com.amit.mybankapp.accounts.api.dto.request;
+package com.amit.mybankapp.accounts.api.wallet.dto.request;
 
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;

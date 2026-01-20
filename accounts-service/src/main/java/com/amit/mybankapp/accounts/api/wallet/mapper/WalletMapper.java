@@ -1,6 +1,6 @@
-package com.amit.mybankapp.accounts.api.mapper;
+package com.amit.mybankapp.accounts.api.wallet.mapper;
 
-import com.amit.mybankapp.accounts.api.dto.response.WalletResponse;
+import com.amit.mybankapp.accounts.api.wallet.dto.response.WalletResponse;
 import com.amit.mybankapp.accounts.domain.wallet.Wallet;
 import org.springframework.stereotype.Component;
 

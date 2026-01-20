@@ -1,4 +1,4 @@
-package com.amit.mybankapp.accounts.api.dto.request;
+package com.amit.mybankapp.accounts.api.customer.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

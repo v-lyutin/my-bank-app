@@ -1,4 +1,4 @@
-package com.amit.mybankapp.accounts.api.dto.response;
+package com.amit.mybankapp.accounts.api.customer.dto.response;
 
 import java.util.UUID;
 

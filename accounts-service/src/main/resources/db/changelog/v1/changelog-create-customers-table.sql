@@ -11,4 +11,5 @@ CREATE TABLE IF NOT EXISTS ${schemaName}.customers (
   last_name   VARCHAR(64) NOT NULL CHECK (length(trim(last_name)) > 0),
   birth_date  DATE NOT NULL
 );
+
 -- rollback DROP TABLE ${schemaName}.customers;

@@ -1,8 +1,8 @@
-package com.amit.mybankapp.accounts.api.mapper;
+package com.amit.mybankapp.accounts.api.customer.mapper;
 
-import com.amit.mybankapp.accounts.api.dto.request.UpdateProfileRequest;
-import com.amit.mybankapp.accounts.api.dto.response.CustomerLookupResponse;
-import com.amit.mybankapp.accounts.api.dto.response.CustomerResponse;
+import com.amit.mybankapp.accounts.api.customer.dto.request.UpdateProfileRequest;
+import com.amit.mybankapp.accounts.api.customer.dto.response.CustomerLookupResponse;
+import com.amit.mybankapp.accounts.api.customer.dto.response.CustomerResponse;
 import com.amit.mybankapp.accounts.application.model.CustomerLookup;
 import com.amit.mybankapp.accounts.domain.customer.Customer;
 import com.amit.mybankapp.accounts.domain.customer.vo.Profile;

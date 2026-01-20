@@ -1,4 +1,4 @@
-package com.amit.mybankapp.accounts.api.dto.response;
+package com.amit.mybankapp.accounts.api.wallet.dto.response;
 
 import java.math.BigDecimal;
 import java.util.UUID;

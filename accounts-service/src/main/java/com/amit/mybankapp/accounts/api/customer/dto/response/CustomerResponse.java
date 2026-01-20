@@ -1,4 +1,4 @@
-package com.amit.mybankapp.accounts.api.dto.response;
+package com.amit.mybankapp.accounts.api.customer.dto.response;
 
 import java.time.LocalDate;
 import java.util.UUID;

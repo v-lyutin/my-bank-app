@@ -12,7 +12,6 @@ import org.springframework.context.annotation.Import;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -26,139 +25,161 @@ class JdbcWalletRepositoryTest extends AbstractRepositoryIT {
     private JdbcWalletRepository jdbcWalletRepository;
 
     @Test
-    @DisplayName(value = "Should return wallet when wallet exists by walletId and customerId")
-    void findByWalletIdAndCustomerId_shouldReturnWalletWhenWalletExistsByWalletIdAndCustomerId() {
-        UUID customerId = UUID.randomUUID();
-        UUID walletId = UUID.randomUUID();
+    @DisplayName(value = "Should return empty when primary wallet does not exist for customer")
+    void findPrimaryByCustomerId_shouldReturnEmptyWhenPrimaryWalletDoesNotExistForCustomer() {
+        CustomerId customerId = CustomerId.of(UUID.randomUUID());
+        this.insertCustomer(customerId);
 
-        this.insertCustomerRow(customerId, "john.doe", "John", "Doe");
-        this.insertWalletRow(walletId, customerId, new BigDecimal("10.00"));
+        Optional<Wallet> wallet = this.jdbcWalletRepository.findPrimaryByCustomerId(customerId);
 
-        Optional<Wallet> result = this.jdbcWalletRepository.findByWalletIdAndCustomerId(
-                new WalletId(walletId),
-                new CustomerId(customerId)
-        );
-
-        assertTrue(result.isPresent());
-
-        Wallet wallet = result.get();
-
-        assertAll(
-                () -> assertEquals(new WalletId(walletId), wallet.getWalletId()),
-                () -> assertEquals(new CustomerId(customerId), wallet.getCustomerId()),
-                () -> assertEquals(new BigDecimal("10.00"), wallet.getBalance().amount())
-        );
+        assertTrue(wallet.isEmpty());
     }
 
     @Test
-    @DisplayName(value = "Should return empty optional when wallet does not exist by walletId and customerId")
-    void findByWalletIdAndCustomerId_shouldReturnEmptyOptionalWhenWalletDoesNotExistByWalletIdAndCustomerId() {
-        Optional<Wallet> result = this.jdbcWalletRepository.findByWalletIdAndCustomerId(
-                new WalletId(UUID.randomUUID()),
-                new CustomerId(UUID.randomUUID())
-        );
+    @DisplayName(value = "Should return primary wallet when it exists for customer")
+    void findPrimaryByCustomerId_shouldReturnPrimaryWalletWhenItExistsForCustomer() {
+        CustomerId customerId = CustomerId.of(UUID.randomUUID());
+        this.insertCustomer(customerId);
 
-        assertTrue(result.isEmpty());
+        WalletId walletId = WalletId.of(UUID.randomUUID());
+        this.insertWallet(walletId, customerId, Money.of(new BigDecimal("10.50")), true);
+
+        Optional<Wallet> wallet = this.jdbcWalletRepository.findPrimaryByCustomerId(customerId);
+
+        assertTrue(wallet.isPresent());
+        assertEquals(walletId, wallet.get().getWalletId());
+        assertEquals(customerId, wallet.get().getCustomerId());
+        assertEquals(new BigDecimal("10.50"), wallet.get().getBalance().amount());
     }
 
     @Test
-    @DisplayName(value = "Should return wallets when wallets exist for customerId")
-    void findByCustomerId_shouldReturnWalletsWhenWalletsExistForCustomerId() {
-        UUID customerId = UUID.randomUUID();
-        UUID firstWalletId = UUID.randomUUID();
-        UUID secondWalletId = UUID.randomUUID();
+    @DisplayName(value = "Should return empty when only non primary wallet exists for customer")
+    void findPrimaryByCustomerId_shouldReturnEmptyWhenOnlyNonPrimaryWalletExistsForCustomer() {
+        CustomerId customerId = CustomerId.of(UUID.randomUUID());
+        this.insertCustomer(customerId);
 
-        this.insertCustomerRow(customerId, "jane.doe", "Jane", "Doe");
+        WalletId walletId = WalletId.of(UUID.randomUUID());
+        this.insertWallet(walletId, customerId, Money.of(new BigDecimal("99.99")), false);
 
-        this.insertWalletRow(firstWalletId, customerId, new BigDecimal("1.00"));
-        this.insertWalletRow(secondWalletId, customerId, new BigDecimal("2.50"));
+        Optional<Wallet> wallet = this.jdbcWalletRepository.findPrimaryByCustomerId(customerId);
 
-        List<Wallet> wallets = this.jdbcWalletRepository.findByCustomerId(new CustomerId(customerId));
-
-        assertEquals(2, wallets.size());
-
-        assertTrue(wallets.stream().anyMatch(wallet ->
-                wallet.getWalletId().equals(new WalletId(firstWalletId))
-                        && wallet.getCustomerId().equals(new CustomerId(customerId))
-                        && wallet.getBalance().amount().compareTo(new BigDecimal("1.00")) == 0
-        ));
-
-        assertTrue(wallets.stream().anyMatch(wallet ->
-                wallet.getWalletId().equals(new WalletId(secondWalletId))
-                        && wallet.getCustomerId().equals(new CustomerId(customerId))
-                        && wallet.getBalance().amount().compareTo(new BigDecimal("2.50")) == 0
-        ));
+        assertTrue(wallet.isEmpty());
     }
 
     @Test
-    @DisplayName(value = "Should update wallet balance when updateBalance is called")
-    void updateBalance_shouldUpdateWalletBalanceWhenUpdateBalanceIsCalled() {
-        UUID customerIdUuid = UUID.randomUUID();
-        UUID walletIdUuid = UUID.randomUUID();
+    @DisplayName(value = "Should return primary wallet for update when it exists for customer")
+    void findPrimaryByCustomerIdForUpdate_shouldReturnPrimaryWalletWhenItExistsForCustomer() {
+        CustomerId customerId = CustomerId.of(UUID.randomUUID());
+        this.insertCustomer(customerId);
 
-        this.insertCustomerRow(customerIdUuid, "balance.user", "Balance", "User");
-        this.insertWalletRow(walletIdUuid, customerIdUuid, new BigDecimal("10.00"));
+        WalletId walletId = WalletId.of(UUID.randomUUID());
+        this.insertWallet(walletId, customerId, Money.of(new BigDecimal("15.00")), true);
 
-        WalletId walletId = new WalletId(walletIdUuid);
-        CustomerId customerId = new CustomerId(customerIdUuid);
+        Optional<Wallet> wallet = this.jdbcWalletRepository.findPrimaryByCustomerIdForUpdate(customerId);
 
-        Wallet wallet = this.jdbcWalletRepository.findByWalletIdAndCustomerId(walletId, customerId).orElseThrow();
+        assertTrue(wallet.isPresent());
+        assertEquals(walletId, wallet.get().getWalletId());
+        assertEquals(customerId, wallet.get().getCustomerId());
+        assertEquals(new BigDecimal("15.00"), wallet.get().getBalance().amount());
+    }
 
-        wallet.deposit(new Money(new BigDecimal("2.55")));
+    @Test
+    @DisplayName(value = "Should update balance when wallet exists")
+    void updateBalance_shouldUpdateBalanceWhenWalletExists() {
+        CustomerId customerId = CustomerId.of(UUID.randomUUID());
+        this.insertCustomer(customerId);
+
+        WalletId walletId = WalletId.of(UUID.randomUUID());
+        this.insertWallet(walletId, customerId, Money.of(new BigDecimal("10.00")), true);
+
+        Wallet wallet = this.jdbcWalletRepository.findPrimaryByCustomerId(customerId).orElseThrow();
+        wallet.deposit(Money.of(new BigDecimal("15.75")));
 
         this.jdbcWalletRepository.updateBalance(wallet);
 
-        Wallet reloadedWallet = this.jdbcWalletRepository.findByWalletIdAndCustomerId(walletId, customerId).orElseThrow();
+        Money storedBalance = this.readBalanceByWalletId(walletId);
 
-        assertEquals(new BigDecimal("12.55"), reloadedWallet.getBalance().amount());
+        assertEquals(new BigDecimal("25.75"), storedBalance.amount());
     }
 
     @Test
-    @DisplayName(value = "Should return wallet when wallet exists by walletId and customerId for update")
-    void findByWalletIdAndCustomerIdForUpdate_shouldReturnWalletWhenWalletExistsByWalletIdAndCustomerIdForUpdate() {
-        UUID customerId = UUID.randomUUID();
-        UUID walletId = UUID.randomUUID();
+    @DisplayName(value = "Should not update other wallet when updating balance for specific wallet")
+    void updateBalance_shouldNotUpdateOtherWalletWhenUpdatingBalanceForSpecificWallet() {
+        CustomerId firstCustomerId = CustomerId.of(UUID.randomUUID());
+        CustomerId secondCustomerId = CustomerId.of(UUID.randomUUID());
+        this.insertCustomer(firstCustomerId);
+        this.insertCustomer(secondCustomerId);
 
-        this.insertCustomerRow(customerId, "locking.user", "Locking", "User");
-        this.insertWalletRow(walletId, customerId, new BigDecimal("5.00"));
+        WalletId firstWalletId = WalletId.of(UUID.randomUUID());
+        WalletId secondWalletId = WalletId.of(UUID.randomUUID());
 
-        Optional<Wallet> result = this.jdbcWalletRepository.findByWalletIdAndCustomerIdForUpdate(
-                new WalletId(walletId),
-                new CustomerId(customerId)
-        );
+        this.insertWallet(firstWalletId, firstCustomerId, Money.of(new BigDecimal("10.00")), true);
+        this.insertWallet(secondWalletId, secondCustomerId, Money.of(new BigDecimal("50.00")), true);
 
-        assertTrue(result.isPresent());
-        assertEquals(new BigDecimal("5.00"), result.get().getBalance().amount());
+        Wallet firstWallet = this.jdbcWalletRepository.findPrimaryByCustomerId(firstCustomerId).orElseThrow();
+        firstWallet.deposit(Money.of(new BigDecimal("5.00")));
+
+        this.jdbcWalletRepository.updateBalance(firstWallet);
+
+        Money firstStoredBalance = this.readBalanceByWalletId(firstWalletId);
+        Money secondStoredBalance = this.readBalanceByWalletId(secondWalletId);
+
+        assertEquals(new BigDecimal("15.00"), firstStoredBalance.amount());
+        assertEquals(new BigDecimal("50.00"), secondStoredBalance.amount());
     }
 
-    private void insertCustomerRow(UUID customerId, String login, String firstName, String lastName) {
+    private void insertCustomer(CustomerId customerId) {
+        String login = this.createValidUniqueLogin(customerId);
+
         this.namedParameterJdbcTemplate.update(
                 """
-                INSERT INTO accounts.customers (customer_id, login, first_name, last_name, birth_date)
-                VALUES (:customerId, :login, :firstName, :lastName, :birthDate)
-                """,
+                        INSERT INTO accounts.customers(customer_id, login, first_name, last_name, birth_date)
+                        VALUES (:customerId, :login, :firstName, :lastName, :birthDate)
+                        """,
                 Map.of(
-                        "customerId", customerId,
+                        "customerId", customerId.value(),
                         "login", login,
-                        "firstName", firstName,
-                        "lastName", lastName,
-                        "birthDate", LocalDate.now().minusYears(20)
+                        "firstName", "john",
+                        "lastName", "doe",
+                        "birthDate", LocalDate.of(1990, 1, 15)
                 )
         );
     }
 
-    private void insertWalletRow(UUID walletId, UUID customerId, BigDecimal balance) {
+    private String createValidUniqueLogin(CustomerId customerId) {
+        String suffix = customerId.value().toString().replace("-", "");
+        String login = "user" + suffix;
+        return login.toLowerCase();
+    }
+
+    private void insertWallet(WalletId walletId, CustomerId customerId, Money balance, boolean isPrimary) {
         this.namedParameterJdbcTemplate.update(
                 """
-                INSERT INTO accounts.wallets (wallet_id, customer_id, balance)
-                VALUES (:walletId, :customerId, :balance)
-                """,
+                        INSERT INTO accounts.wallets(wallet_id, customer_id, balance, is_primary)
+                        VALUES (:walletId, :customerId, :balance, :isPrimary)
+                        """,
                 Map.of(
-                        "walletId", walletId,
-                        "customerId", customerId,
-                        "balance", balance
+                        "walletId", walletId.value(),
+                        "customerId", customerId.value(),
+                        "balance", balance.amount(),
+                        "isPrimary", isPrimary
                 )
         );
+    }
+
+    private Money readBalanceByWalletId(WalletId walletId) {
+        BigDecimal balance = this.namedParameterJdbcTemplate.queryForObject(
+                """
+                        SELECT balance
+                        FROM accounts.wallets
+                        WHERE wallet_id = :walletId
+                        """,
+                Map.of("walletId", walletId.value()),
+                BigDecimal.class
+        );
+
+        assertNotNull(balance);
+        return Money.of(balance);
     }
 
 }

@@ -1,7 +1,6 @@
 package com.amit.mybankapp.accounts.application.exception;
 
 import com.amit.mybankapp.accounts.domain.customer.vo.CustomerId;
-import com.amit.mybankapp.accounts.domain.wallet.vo.WalletId;
 
 public final class ResourceNotFoundException extends RuntimeException {
 
@@ -13,8 +12,8 @@ public final class ResourceNotFoundException extends RuntimeException {
         return new ResourceNotFoundException("Account not found for userId=" + customerId.value());
     }
 
-    public static ResourceNotFoundException forWallet(WalletId walletId) {
-        return new ResourceNotFoundException("Wallet not found for walletId=" + walletId.value());
+    public static ResourceNotFoundException forWalletOfCustomer(CustomerId customerId) {
+        return new ResourceNotFoundException("Wallet not found for customerId=" + customerId.value());
     }
 
 }
