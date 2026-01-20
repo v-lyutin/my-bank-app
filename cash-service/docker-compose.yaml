@@ -1,0 +1,9 @@
+services:
+  cash-db:
+    image: ${POSTGRESQL_IMAGE:-postgres:17.6-alpine3.22}
+    ports:
+      - "${CASH_DB_PORT:-5435}:5432"
+    environment:
+      POSTGRES_USER: ${CASH_DB_USER:-admin}
+      POSTGRES_PASSWORD: ${CASH_DB_PASSWORD:-password}
+      POSTGRES_DB: ${CASH_DB_NAME:-cash}

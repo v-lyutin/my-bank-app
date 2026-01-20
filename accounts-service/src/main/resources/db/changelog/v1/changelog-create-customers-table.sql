@@ -1,7 +1,7 @@
 -- liquibase formatted sql
 
 -- changeset v-lyutin:create-customers-table
-CREATE TABLE ${schemaName}.customers (
+CREATE TABLE IF NOT EXISTS ${schemaName}.customers (
   customer_id UUID PRIMARY KEY,
   login       VARCHAR(128) NOT NULL UNIQUE
                 CHECK (length(login) BETWEEN 3 AND 128)
