@@ -25,11 +25,10 @@ public class CashOperationAudit {
         this.clock = clock;
     }
 
-    public void accepted(UUID operationId, UUID walletId, CashCommandType type, BigDecimal amount) {
+    public void accepted(UUID operationId, CashCommandType type, BigDecimal amount) {
         this.cashOperationAuditRecordRepository.save(
                 new CashOperationAuditRecord(
                         operationId,
-                        walletId,
                         type.name(),
                         amount,
                         CashStatus.ACCEPTED.name(),
@@ -38,11 +37,10 @@ public class CashOperationAudit {
         );
     }
 
-    public void rejected(UUID operationId, UUID walletId, CashCommandType type, BigDecimal amount) {
+    public void rejected(UUID operationId, CashCommandType type, BigDecimal amount) {
         this.cashOperationAuditRecordRepository.save(
                 new CashOperationAuditRecord(
                         operationId,
-                        walletId,
                         type.name(),
                         amount,
                         CashStatus.REJECTED.name(),

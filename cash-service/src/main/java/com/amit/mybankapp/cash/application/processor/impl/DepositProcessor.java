@@ -4,13 +4,12 @@ import com.amit.mybankapp.cash.application.client.AccountsClient;
 import com.amit.mybankapp.cash.application.client.NotificationsClient;
 import com.amit.mybankapp.cash.application.client.dto.NotificationRequest;
 import com.amit.mybankapp.cash.application.client.dto.WalletResponse;
-import com.amit.mybankapp.cash.application.processor.CashCommandProcessor;
 import com.amit.mybankapp.cash.application.model.type.CashCommandType;
+import com.amit.mybankapp.cash.application.processor.CashCommandProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
-import java.util.UUID;
 
 @Component
 public class DepositProcessor implements CashCommandProcessor {
@@ -31,9 +30,9 @@ public class DepositProcessor implements CashCommandProcessor {
     }
 
     @Override
-    public void process(UUID walletId, BigDecimal amount) {
-        WalletResponse walletResponse = this.accountsClient.deposit(walletId, amount);
-        this.notificationsClient.sendDepositCreatedNotification(NotificationRequest.deposit(walletResponse.customerId(), walletId, amount));
+    public void process(BigDecimal amount) {
+        WalletResponse walletResponse = this.accountsClient.deposit(amount);
+        this.notificationsClient.sendDepositCreatedNotification(NotificationRequest.deposit(walletResponse.customerId(), walletResponse.walletId(), amount));
     }
 
 }

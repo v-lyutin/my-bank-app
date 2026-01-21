@@ -22,6 +22,7 @@ public class CashCommandProcessorRegistry {
     public CashCommandProcessor get(CashCommandType type) {
         CashCommandProcessor cashCommandProcessor = this.processors.get(type);
         if (cashCommandProcessor == null) {
+            // TODO: need to create custom exception or add handle this in GlobalExceptionHandler
             throw new IllegalArgumentException("Unsupported command type: " + type);
         }
         return cashCommandProcessor;

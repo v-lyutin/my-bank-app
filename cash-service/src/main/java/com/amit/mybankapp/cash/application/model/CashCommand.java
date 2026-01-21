@@ -5,18 +5,15 @@ import com.amit.mybankapp.cash.application.model.type.CashCommandType;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Objects;
-import java.util.UUID;
 
 public record CashCommand(
         CashCommandType type,
-        UUID walletId,
         BigDecimal amount) {
 
     public CashCommand {
 
-        if (type == null || walletId == null || amount == null) {
-            throw new InvalidCashCommandException("walletId/type/amount must not be null");
+        if (type == null || amount == null) {
+            throw new InvalidCashCommandException("type/amount must not be null");
         }
 
         if (amount.signum() <= 0) {

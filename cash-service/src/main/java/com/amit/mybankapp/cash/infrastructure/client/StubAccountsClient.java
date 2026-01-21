@@ -15,21 +15,15 @@ public class StubAccountsClient implements AccountsClient {
     private static final Logger LOGGER = LoggerFactory.getLogger(StubAccountsClient.class);
 
     @Override
-    public WalletResponse deposit(UUID walletId, BigDecimal amount) {
-        LOGGER.info("[STUB] Accounts deposit: walletId={}, amount={}", walletId, amount);
+    public WalletResponse deposit(BigDecimal amount) {
+        LOGGER.info("[STUB] Accounts deposit: amount={}", amount);
         return new WalletResponse(UUID.randomUUID(), UUID.randomUUID(), BigDecimal.TEN);
     }
 
     @Override
-    public WalletResponse withdraw(UUID walletId, BigDecimal amount) {
-        LOGGER.info("[STUB] Accounts withdraw: walletId={}, amount={}", walletId, amount);
+    public WalletResponse withdraw(BigDecimal amount) {
+        LOGGER.info("[STUB] Accounts withdraw: amount={}", amount);
         return new WalletResponse(UUID.randomUUID(), UUID.randomUUID(), BigDecimal.TEN);
-    }
-
-    @Override
-    public UUID getPrimaryWalletIdForCurrentCustomer() {
-        LOGGER.info("[STUB] Getting primary walletId for current customer");
-        return UUID.randomUUID();
     }
 
 }

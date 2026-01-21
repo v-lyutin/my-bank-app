@@ -6,7 +6,6 @@ import java.util.UUID;
 
 public record CashOperationAuditRecord(
         UUID operationId,
-        UUID walletId,
         String type,
         BigDecimal amount,
         String status,
