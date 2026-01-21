@@ -9,10 +9,7 @@ import com.amit.mybankapp.accounts.domain.wallet.vo.Money;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(path = "/wallets")
@@ -26,6 +23,13 @@ public class WalletResource {
     public WalletResource(WalletUseCase walletUseCase, WalletMapper walletMapper) {
         this.walletUseCase = walletUseCase;
         this.walletMapper = walletMapper;
+    }
+
+    // front-ui only — internal
+    @GetMapping(path = "/me")
+    public ResponseEntity<WalletResponse> getPrimaryWalletForCurrentUser() {
+        Wallet wallet = this.walletUseCase.getPrimaryWalletForCurrentUser();
+        return ResponseEntity.ok(this.walletMapper.toWalletResponse(wallet));
     }
 
     // cash-service only — internal

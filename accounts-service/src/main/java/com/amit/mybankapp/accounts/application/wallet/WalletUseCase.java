@@ -23,6 +23,13 @@ public class WalletUseCase {
         this.currentUserProvider = currentUserProvider;
     }
 
+    @Transactional(readOnly = true)
+    public Wallet getPrimaryWalletForCurrentUser() {
+        CustomerId customerId = this.currentUserProvider.currentUserId();
+        return this.walletRepository.findPrimaryByCustomerId(customerId)
+                .orElseThrow(() -> ResourceNotFoundException.forWalletOfCustomer(customerId));
+    }
+
     @Transactional
     public Wallet deposit(Money amount) {
         Wallet wallet = this.getPrimaryWalletForUpdate();
