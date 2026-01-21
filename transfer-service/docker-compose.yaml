@@ -1,0 +1,9 @@
+services:
+  transfer-db:
+    image: ${POSTGRESQL_IMAGE:-postgres:17.6-alpine3.22}
+    ports:
+      - "${TRANSFER_DB_PORT:-5436}:5432"
+    environment:
+      POSTGRES_USER: ${TRANSFER_DB_USER:-admin}
+      POSTGRES_PASSWORD: ${TRANSFER_DB_PASSWORD:-password}
+      POSTGRES_DB: ${TRANSFER_DB_NAME:-transfer}

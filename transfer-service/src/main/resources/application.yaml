@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: transfer-service
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+    enabled: true
+  threads:
+    virtual:
+      enabled: true
+server:
+  port: ${SERVER_PORT:8083}
