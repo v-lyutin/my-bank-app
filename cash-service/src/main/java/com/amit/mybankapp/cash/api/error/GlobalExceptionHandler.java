@@ -1,8 +1,8 @@
 package com.amit.mybankapp.cash.api.error;
 
-import com.amit.mybankapp.cash.api.error.dto.ApiErrorResponse;
 import com.amit.mybankapp.cash.application.exception.CashOperationExecutionException;
 import com.amit.mybankapp.cash.application.model.exception.InvalidCashCommandException;
+import com.amit.mybankapp.commons.dto.advice.ApiErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +22,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiErrorResponse> handleValidationException(MethodArgumentNotValidException exception,
-                                                                      HttpServletRequest request) {
+                                                                                                     HttpServletRequest request) {
         String message = exception.getBindingResult().getFieldErrors().stream()
                 .map(err -> err.getField() + ": " + err.getDefaultMessage())
                 .distinct()

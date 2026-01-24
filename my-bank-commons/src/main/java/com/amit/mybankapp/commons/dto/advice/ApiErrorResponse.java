@@ -1,4 +1,4 @@
-package com.amit.mybankapp.cash.api.error.dto;
+package com.amit.mybankapp.commons.dto.advice;
 
 import java.time.LocalDateTime;
 

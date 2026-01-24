@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(path = "/transfers")
+@RequestMapping(path = "/customers/me/transfers")
 public class TransferController {
 
     private final TransferUseCase transferUseCase;

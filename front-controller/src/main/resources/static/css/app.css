@@ -1,0 +1,32 @@
+:root{
+  --brand-1:#4f46e5;
+  --brand-2:#6366f1;
+}
+
+body{ background:#f4f6fb; }
+.brand-header{ background: linear-gradient(135deg, var(--brand-1), var(--brand-2)); }
+.page-shell{ max-width:1180px; }
+
+.card{
+  border:0;
+  border-radius:16px;
+  box-shadow:0 14px 40px rgba(15, 23, 42, 0.08);
+}
+
+.card-title{ letter-spacing:.2px; }
+
+.form-control, .form-select{
+  border-radius:12px;
+  padding:10px 12px;
+}
+
+select.form-select{
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.hint{
+  font-size:12px;
+  color:#6b7280;
+}

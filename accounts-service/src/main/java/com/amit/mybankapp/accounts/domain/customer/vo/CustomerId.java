@@ -6,7 +6,7 @@ import java.util.UUID;
 public record CustomerId(UUID value) {
 
     public CustomerId {
-        Objects.requireNonNull(value, "userId must not be null");
+        Objects.requireNonNull(value, "customerId must not be null");
     }
 
     public static CustomerId of(UUID value) {

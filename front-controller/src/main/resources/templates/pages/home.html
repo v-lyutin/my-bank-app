@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: layout(
+        content=~{::content},
+        pageTitle='MyBank'
+      )}">
+<body>
+<div th:fragment="content">
+    <div class="row g-4 justify-content-center">
+
+        <div class="col-12 col-lg-4 col-md-6"
+             th:replace="~{fragments/cards/account :: card(
+                me=${me},
+                balance=${balance},
+                profileForm=${profileForm},
+                profileSuccess=${profileSuccess}
+             )}"></div>
+
+        <div class="col-12 col-lg-4 col-md-6"
+             th:replace="~{fragments/cards/cash :: card(
+                cashForm=${cashForm},
+                cashSuccess=${cashSuccess},
+                cashError=${cashError}
+             )}"></div>
+
+        <div class="col-12 col-lg-4 col-md-6"
+             th:replace="~{fragments/cards/transfer :: card(
+                transferForm=${transferForm},
+                recipients=${recipients},
+                transferSuccess=${transferSuccess},
+                transferError=${transferError}
+             )}"></div>
+
+    </div>
+</div>
+</body>
+</html>

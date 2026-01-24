@@ -28,7 +28,7 @@ class CustomerIdTest {
                 () -> new CustomerId(null)
         );
 
-        assertEquals("userId must not be null", exception.getMessage());
+        assertEquals("customerId must not be null", exception.getMessage());
     }
 
     @Test
@@ -49,7 +49,7 @@ class CustomerIdTest {
                 () -> CustomerId.of(null)
         );
 
-        assertEquals("userId must not be null", exception.getMessage());
+        assertEquals("customerId must not be null", exception.getMessage());
     }
 
 }

@@ -1,6 +1,6 @@
 package com.amit.mybankapp.transfer.api.error;
 
-import com.amit.mybankapp.transfer.api.error.dto.ApiErrorResponse;
+import com.amit.mybankapp.commons.dto.advice.ApiErrorResponse;
 import com.amit.mybankapp.transfer.application.exception.TransferExecutionException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;

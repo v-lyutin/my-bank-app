@@ -9,7 +9,7 @@ public final class ResourceNotFoundException extends RuntimeException {
     }
 
     public static ResourceNotFoundException forAccount(CustomerId customerId) {
-        return new ResourceNotFoundException("Account not found for userId=" + customerId.value());
+        return new ResourceNotFoundException("Account not found for customerId=" + customerId.value());
     }
 
     public static ResourceNotFoundException forWalletOfCustomer(CustomerId customerId) {
