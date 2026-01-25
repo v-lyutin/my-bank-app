@@ -1,5 +1,6 @@
 package com.amit.mybankapp.transfer.application;
 
+import com.amit.mybankapp.apierrors.server.exception.ApiException;
 import com.amit.mybankapp.transfer.application.client.accounts.AccountsClient;
 import com.amit.mybankapp.transfer.application.client.accounts.dto.AccountsTransferResponse;
 import com.amit.mybankapp.transfer.application.client.notifications.NotificationsClient;
@@ -11,7 +12,6 @@ import com.amit.mybankapp.transfer.infrastructure.audit.model.type.TransferStatu
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestClientResponseException;
 
 import java.util.UUID;
 
@@ -52,27 +52,17 @@ public class TransferUseCase {
 
             return new TransferResult(transferId, TransferStatus.ACCEPTED);
 
-        } catch (RestClientResponseException exception) {
-            this.transferAudit.rejected(
-                    transferId,
-                    null,
-                    command.recipientCustomerId(),
-                    command.amount()
-            );
+        } catch (ApiException exception) {
+            this.transferAudit.rejected(transferId, null, command.recipientCustomerId(), command.amount());
 
-            if (exception.getStatusCode().is4xxClientError()) {
+            if (exception.status().is4xxClientError()) {
                 throw exception;
             }
 
             throw new TransferExecutionException(transferId, exception);
 
         } catch (RuntimeException exception) {
-            this.transferAudit.rejected(
-                    transferId,
-                    null,
-                    command.recipientCustomerId(),
-                    command.amount()
-            );
+            this.transferAudit.rejected(transferId, null, command.recipientCustomerId(), command.amount());
             throw new TransferExecutionException(transferId, exception);
         }
     }

@@ -1,15 +1,14 @@
-package com.amit.mybankapp.transfer.application.exception;
+package com.amit.mybankapp.apierrors.server.exception.base;
 
 import com.amit.mybankapp.apierrors.model.ApiErrorResponse;
 import com.amit.mybankapp.apierrors.server.exception.ApiException;
 import org.springframework.http.HttpStatus;
 
-import java.util.UUID;
+public class UpstreamUnavailableException extends ApiException {
 
-public final class TransferExecutionException extends ApiException {
-
-    public TransferExecutionException(UUID transferId, Throwable cause) {
-        super("Transfer " + transferId + " execution failed", cause);
+    public UpstreamUnavailableException(String message, Throwable cause) {
+        super(message);
+        initCause(cause);
     }
 
     @Override

@@ -9,3 +9,8 @@ spring:
       enabled: true
 server:
   port: ${SERVER_PORT:8083}
+clients:
+  accounts:
+    base-url: http://accounts-service
+  notifications:
+    base-url: http://notifications-service

@@ -11,5 +11,6 @@ public interface ApiErrorMappable {
 
     default String message() {
         return null;
+    }
 
 }

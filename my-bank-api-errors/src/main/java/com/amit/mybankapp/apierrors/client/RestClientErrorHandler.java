@@ -2,9 +2,11 @@ package com.amit.mybankapp.apierrors.client;
 
 import com.amit.mybankapp.apierrors.client.exception.RemoteServiceException;
 import com.amit.mybankapp.apierrors.model.ApiErrorResponse;
+import com.amit.mybankapp.apierrors.server.exception.base.UpstreamUnavailableException;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.client.ClientHttpResponse;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClient;
 
 import java.io.IOException;
@@ -19,6 +21,13 @@ public final class RestClientErrorHandler {
     }
 
     public void register(RestClient.Builder builder) {
+        builder.requestInterceptor((request, body, execution) -> {
+            try {
+                return execution.execute(request, body);
+            } catch (ResourceAccessException exception) {
+                throw new UpstreamUnavailableException("Upstream connection error", exception);
+            }
+        });
         builder.defaultStatusHandler(HttpStatusCode::isError, this::handleErrorResponse);
     }
 

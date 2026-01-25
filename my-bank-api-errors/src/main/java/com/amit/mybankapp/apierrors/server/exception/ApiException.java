@@ -9,6 +9,10 @@ public abstract class ApiException extends RuntimeException implements ApiErrorM
         super(message);
     }
 
+    protected ApiException(String message, Throwable throwable) {
+        super(message);
+    }
+
     @Override
     public abstract ApiErrorResponse.ApiErrorCode code();
 
