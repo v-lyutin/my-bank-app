@@ -14,14 +14,14 @@ public interface AccountsClient {
 
     CustomerResponse getCurrentCustomer();
 
-    UpdateProfileRequest updateProfile();
+    CustomerResponse updateProfile(UpdateProfileRequest updateProfileRequest);
 
     List<CustomerLookupResponse> getTransferRecipients();
+
+    CreateTransferResponse createTransfer(CreateTransferRequest createTransferRequest);
 
     WalletResponse deposit(BigDecimal amount);
 
     WalletResponse withdraw(BigDecimal amount);
-
-    CreateTransferResponse createTransfer(CreateTransferRequest createTransferRequest);
 
 }
