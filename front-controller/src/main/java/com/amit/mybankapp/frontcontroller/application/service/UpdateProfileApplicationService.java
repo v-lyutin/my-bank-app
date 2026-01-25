@@ -1,6 +1,6 @@
 package com.amit.mybankapp.frontcontroller.application.service;
 
-import com.amit.mybankapp.commons.dto.accounts.UpdateProfileRequest;
+import com.amit.mybankapp.commons.client.dto.accounts.UpdateProfileRequest;
 import com.amit.mybankapp.frontcontroller.application.command.UpdateProfileCommand;
 import com.amit.mybankapp.frontcontroller.application.exception.ValidationException;
 import com.amit.mybankapp.frontcontroller.application.usecase.UpdateProfileUseCase;

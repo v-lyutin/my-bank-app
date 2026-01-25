@@ -1,8 +1,8 @@
 package com.amit.mybankapp.frontcontroller.port;
 
-import com.amit.mybankapp.commons.dto.accounts.CustomerLookupResponse;
-import com.amit.mybankapp.commons.dto.accounts.CustomerResponse;
-import com.amit.mybankapp.commons.dto.accounts.UpdateProfileRequest;
+import com.amit.mybankapp.commons.client.dto.accounts.CustomerLookupResponse;
+import com.amit.mybankapp.commons.client.dto.accounts.CustomerResponse;
+import com.amit.mybankapp.commons.client.dto.accounts.UpdateProfileRequest;
 
 import java.util.List;
 

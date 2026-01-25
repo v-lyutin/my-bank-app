@@ -1,4 +1,4 @@
-package com.amit.mybankapp.commons.dto.transfer;
+package com.amit.mybankapp.commons.client.dto.transfer;
 
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;

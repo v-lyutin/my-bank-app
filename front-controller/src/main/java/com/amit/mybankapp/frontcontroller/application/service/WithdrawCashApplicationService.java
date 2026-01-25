@@ -1,6 +1,6 @@
 package com.amit.mybankapp.frontcontroller.application.service;
 
-import com.amit.mybankapp.commons.dto.wallet.WalletOperationRequest;
+import com.amit.mybankapp.commons.client.dto.wallet.WalletOperationRequest;
 import com.amit.mybankapp.frontcontroller.application.command.WalletOperationCommand;
 import com.amit.mybankapp.frontcontroller.application.service.util.MoneyValidator;
 import com.amit.mybankapp.frontcontroller.application.usecase.WithdrawCashUseCase;

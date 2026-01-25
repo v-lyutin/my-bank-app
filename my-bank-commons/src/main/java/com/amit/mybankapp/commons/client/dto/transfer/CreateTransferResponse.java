@@ -1,4 +1,4 @@
-package com.amit.mybankapp.commons.dto.transfer;
+package com.amit.mybankapp.commons.client.dto.transfer;
 
 import java.util.UUID;
 

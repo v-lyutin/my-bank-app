@@ -1,8 +1,8 @@
 package com.amit.mybankapp.frontcontroller.application.service;
 
-import com.amit.mybankapp.commons.dto.accounts.CustomerLookupResponse;
-import com.amit.mybankapp.commons.dto.accounts.CustomerResponse;
-import com.amit.mybankapp.commons.dto.wallet.WalletResponse;
+import com.amit.mybankapp.commons.client.dto.accounts.CustomerLookupResponse;
+import com.amit.mybankapp.commons.client.dto.accounts.CustomerResponse;
+import com.amit.mybankapp.commons.client.dto.wallet.WalletResponse;
 import com.amit.mybankapp.frontcontroller.application.result.HomePageResult;
 import com.amit.mybankapp.frontcontroller.application.usecase.GetHomePageUseCase;
 import com.amit.mybankapp.frontcontroller.port.AccountsPort;

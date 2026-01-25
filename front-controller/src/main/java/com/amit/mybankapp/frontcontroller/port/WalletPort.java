@@ -1,7 +1,7 @@
 package com.amit.mybankapp.frontcontroller.port;
 
-import com.amit.mybankapp.commons.dto.wallet.WalletOperationRequest;
-import com.amit.mybankapp.commons.dto.wallet.WalletResponse;
+import com.amit.mybankapp.commons.client.dto.wallet.WalletOperationRequest;
+import com.amit.mybankapp.commons.client.dto.wallet.WalletResponse;
 
 public interface WalletPort {
 
