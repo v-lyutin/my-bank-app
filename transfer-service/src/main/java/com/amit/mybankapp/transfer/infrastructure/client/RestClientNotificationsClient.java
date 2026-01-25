@@ -17,7 +17,7 @@ public class RestClientNotificationsClient implements NotificationsClient {
 
     @Override
     public void notify(NotificationRequest request) {
-        restClient
+        this.restClient
                 .post()
                 .uri("/notifications")
                 .body(request)
