@@ -1,12 +1,12 @@
 package com.amit.mybankapp.accounts.api.customer;
 
-import com.amit.mybankapp.accounts.api.customer.dto.request.UpdateProfileRequest;
-import com.amit.mybankapp.accounts.api.customer.dto.response.CustomerLookupResponse;
-import com.amit.mybankapp.accounts.api.customer.dto.response.CustomerResponse;
 import com.amit.mybankapp.accounts.api.customer.mapper.CustomerMapper;
 import com.amit.mybankapp.accounts.application.customer.CustomerUseCase;
 import com.amit.mybankapp.accounts.domain.customer.Customer;
 import com.amit.mybankapp.accounts.domain.customer.vo.Profile;
+import com.amit.mybankapp.commons.client.dto.accounts.CustomerLookupResponse;
+import com.amit.mybankapp.commons.client.dto.accounts.CustomerResponse;
+import com.amit.mybankapp.commons.client.dto.accounts.UpdateProfileRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

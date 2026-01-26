@@ -1,11 +1,11 @@
 package com.amit.mybankapp.accounts.api.customer.mapper;
 
-import com.amit.mybankapp.accounts.api.customer.dto.request.UpdateProfileRequest;
-import com.amit.mybankapp.accounts.api.customer.dto.response.CustomerLookupResponse;
-import com.amit.mybankapp.accounts.api.customer.dto.response.CustomerResponse;
 import com.amit.mybankapp.accounts.application.customer.model.CustomerLookup;
 import com.amit.mybankapp.accounts.domain.customer.Customer;
 import com.amit.mybankapp.accounts.domain.customer.vo.Profile;
+import com.amit.mybankapp.commons.client.dto.accounts.CustomerLookupResponse;
+import com.amit.mybankapp.commons.client.dto.accounts.CustomerResponse;
+import com.amit.mybankapp.commons.client.dto.accounts.UpdateProfileRequest;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -30,11 +30,11 @@ public final class CustomerMapper {
         );
     }
 
-    public Profile toProfile(UpdateProfileRequest request) {
+    public Profile toProfile(UpdateProfileRequest updateProfileRequest) {
         return new Profile(
-                request.firstName(),
-                request.lastName(),
-                request.birthDate()
+                updateProfileRequest.firstName(),
+                updateProfileRequest.lastName(),
+                updateProfileRequest.birthDate()
         );
     }
 
