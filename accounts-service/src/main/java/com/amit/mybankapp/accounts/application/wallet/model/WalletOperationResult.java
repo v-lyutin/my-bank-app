@@ -1,9 +1,9 @@
-package com.amit.mybankapp.commons.client.dto.wallet;
+package com.amit.mybankapp.accounts.application.wallet.model;
 
 import java.math.BigDecimal;
 import java.util.UUID;
 
-public record WalletOperationResponse(
+public record WalletOperationResult(
         UUID operationId,
         String operationName,
         UUID walletId,

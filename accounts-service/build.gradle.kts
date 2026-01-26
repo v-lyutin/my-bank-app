@@ -5,6 +5,7 @@ plugins {
 
 dependencies {
     implementation(project(":my-bank-commons"))
+    implementation(project(":my-bank-api-errors"))
 
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-jdbc")

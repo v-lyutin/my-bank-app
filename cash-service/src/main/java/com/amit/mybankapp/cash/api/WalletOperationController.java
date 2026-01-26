@@ -1,6 +1,6 @@
 package com.amit.mybankapp.cash.api;
 
-import com.amit.mybankapp.cash.application.CashOperationUseCase;
+import com.amit.mybankapp.cash.application.WalletOperationUseCase;
 import com.amit.mybankapp.commons.client.dto.wallet.WalletOperationRequest;
 import com.amit.mybankapp.commons.client.dto.wallet.WalletOperationResponse;
 import jakarta.validation.Valid;
@@ -13,24 +13,24 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(path = "/customers/me")
-public class CashOperationController {
+public class WalletOperationController {
 
-    private final CashOperationUseCase cashOperationUseCase;
+    private final WalletOperationUseCase walletOperationUseCase;
 
     @Autowired
-    public CashOperationController(CashOperationUseCase cashOperationUseCase) {
-        this.cashOperationUseCase = cashOperationUseCase;
+    public WalletOperationController(WalletOperationUseCase walletOperationUseCase) {
+        this.walletOperationUseCase = walletOperationUseCase;
     }
 
     @PostMapping(path = "/deposits")
     public ResponseEntity<WalletOperationResponse> deposit(@Valid @RequestBody WalletOperationRequest request) {
-        WalletOperationResponse walletOperationResponse = this.cashOperationUseCase.deposit(request.amount());
+        WalletOperationResponse walletOperationResponse = this.walletOperationUseCase.deposit(request.amount());
         return ResponseEntity.ok(walletOperationResponse);
     }
 
     @PostMapping(path = "/withdrawals")
     public ResponseEntity<WalletOperationResponse> withdraw(@Valid @RequestBody WalletOperationRequest request) {
-        WalletOperationResponse walletOperationResponse = this.cashOperationUseCase.withdraw(request.amount());
+        WalletOperationResponse walletOperationResponse = this.walletOperationUseCase.withdraw(request.amount());
         return ResponseEntity.ok(walletOperationResponse);
     }
 

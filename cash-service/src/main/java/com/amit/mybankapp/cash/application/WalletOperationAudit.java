@@ -2,7 +2,7 @@ package com.amit.mybankapp.cash.application;
 
 import com.amit.mybankapp.cash.model.WalletOperationAuditRecord;
 import com.amit.mybankapp.cash.application.repository.WalletOperationAuditRecordRepository;
-import com.amit.mybankapp.cash.application.model.type.CashOperationStatus;
+import com.amit.mybankapp.cash.application.model.type.WalletOperationStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
@@ -31,7 +31,7 @@ public class WalletOperationAudit {
                         walletId,
                         customerId,
                         amount,
-                        CashOperationStatus.ACCEPTED.name(),
+                        WalletOperationStatus.ACCEPTED.name(),
                         Instant.now()
                 )
         );
@@ -46,7 +46,7 @@ public class WalletOperationAudit {
                         walletId,
                         customerId,
                         amount,
-                        CashOperationStatus.REJECTED.name(),
+                        WalletOperationStatus.REJECTED.name(),
                         Instant.now()
                 )
         );

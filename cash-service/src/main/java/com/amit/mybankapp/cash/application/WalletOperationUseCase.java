@@ -1,12 +1,12 @@
 package com.amit.mybankapp.cash.application;
 
 import com.amit.mybankapp.apierrors.server.exception.ApiException;
-import com.amit.mybankapp.cash.application.exception.CashOperationExecutionException;
-import com.amit.mybankapp.cash.application.model.CashCommand;
-import com.amit.mybankapp.cash.application.model.type.WalletCommandType;
+import com.amit.mybankapp.cash.application.exception.WalletOperationExecutionException;
+import com.amit.mybankapp.cash.application.model.WalletOperationCommand;
 import com.amit.mybankapp.cash.application.processor.WalletCommandProcessor;
 import com.amit.mybankapp.cash.application.processor.WalletCommandProcessorRegistry;
 import com.amit.mybankapp.commons.client.dto.wallet.WalletOperationResponse;
+import com.amit.mybankapp.commons.model.type.WalletOperationType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,54 +14,54 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 @Service
-public class CashOperationUseCase {
+public class WalletOperationUseCase {
 
     private final WalletCommandProcessorRegistry walletCommandProcessorRegistry;
 
     private final WalletOperationAudit walletOperationAudit;
 
     @Autowired
-    public CashOperationUseCase(WalletCommandProcessorRegistry walletCommandProcessorRegistry,
-                                WalletOperationAudit walletOperationAudit) {
+    public WalletOperationUseCase(WalletCommandProcessorRegistry walletCommandProcessorRegistry,
+                                  WalletOperationAudit walletOperationAudit) {
         this.walletCommandProcessorRegistry = walletCommandProcessorRegistry;
         this.walletOperationAudit = walletOperationAudit;
     }
 
     public WalletOperationResponse deposit(BigDecimal amount) {
-        return this.executeWithAudit(new CashCommand(WalletCommandType.DEPOSIT, amount));
+        return this.executeWithAudit(new WalletOperationCommand(WalletOperationType.DEPOSIT, amount));
     }
 
     public WalletOperationResponse withdraw(BigDecimal amount) {
-        return this.executeWithAudit(new CashCommand(WalletCommandType.WITHDRAW, amount));
+        return this.executeWithAudit(new WalletOperationCommand(WalletOperationType.WITHDRAW, amount));
     }
 
-    public WalletOperationResponse executeWithAudit(CashCommand command) {
+    public WalletOperationResponse executeWithAudit(WalletOperationCommand command) {
         UUID operationId = UUID.randomUUID();
         BigDecimal amount = command.amount();
 
         try {
-            WalletCommandProcessor walletCommandProcessor = this.walletCommandProcessorRegistry.get(command.type());
+            WalletCommandProcessor walletCommandProcessor = this.walletCommandProcessorRegistry.get(command.walletOperationType());
             WalletOperationResponse walletOperationResponse = walletCommandProcessor.process(amount);
             this.walletOperationAudit.accepted(
                     operationId,
-                    command.type().name(),
+                    command.walletOperationType().name(),
                     walletOperationResponse.walletId(),
                     walletOperationResponse.customerId(),
                     amount
             );
             return enrichWithOperationId(operationId, walletOperationResponse);
         } catch (ApiException exception) {
-            this.walletOperationAudit.rejected(operationId, command.type().name(), null, null, amount);
+            this.walletOperationAudit.rejected(operationId, command.walletOperationType().name(), null, null, amount);
 
             if (exception.status().is4xxClientError()) {
                 throw exception;
             }
 
-            throw new CashOperationExecutionException(operationId, exception);
+            throw new WalletOperationExecutionException(operationId, exception);
 
         } catch (RuntimeException exception) {
-            this.walletOperationAudit.rejected(operationId, command.type().name(), null, null, amount);
-            throw new CashOperationExecutionException(operationId, exception);
+            this.walletOperationAudit.rejected(operationId, command.walletOperationType().name(), null, null, amount);
+            throw new WalletOperationExecutionException(operationId, exception);
         }
     }
 
@@ -71,8 +71,7 @@ public class CashOperationUseCase {
                 walletOperationResponse.operationName(),
                 walletOperationResponse.walletId(),
                 walletOperationResponse.customerId(),
-                walletOperationResponse.amount(),
-                walletOperationResponse.status()
+                walletOperationResponse.amount()
         );
     }
 

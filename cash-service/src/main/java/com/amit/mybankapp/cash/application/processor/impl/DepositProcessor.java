@@ -1,9 +1,9 @@
 package com.amit.mybankapp.cash.application.processor.impl;
 
-import com.amit.mybankapp.cash.application.model.type.WalletCommandType;
 import com.amit.mybankapp.cash.application.processor.WalletCommandProcessor;
 import com.amit.mybankapp.commons.client.AccountsClient;
 import com.amit.mybankapp.commons.client.dto.wallet.WalletOperationResponse;
+import com.amit.mybankapp.commons.model.type.WalletOperationType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -23,8 +23,8 @@ public class DepositProcessor implements WalletCommandProcessor {
     }
 
     @Override
-    public WalletCommandType type() {
-        return WalletCommandType.DEPOSIT;
+    public WalletOperationType walletOperationType() {
+        return WalletOperationType.DEPOSIT;
     }
 
     @Override

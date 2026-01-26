@@ -6,11 +6,11 @@ import org.springframework.http.HttpStatus;
 
 import java.util.UUID;
 
-public final class CashOperationExecutionException extends ApiException {
+public final class WalletOperationExecutionException extends ApiException {
 
     private final UUID operationId;
 
-    public CashOperationExecutionException(UUID operationId, Throwable cause) {
+    public WalletOperationExecutionException(UUID operationId, Throwable cause) {
         super("Cash operationType " + operationId + " execution failed", cause);
         this.operationId = operationId;
     }
