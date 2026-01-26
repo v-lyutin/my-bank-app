@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
-public class CashController {
+public class WalletController {
 
     private final DepositCashUseCase depositCashUseCase;
 
@@ -32,11 +32,11 @@ public class CashController {
     private final CashWebMapper cashWebMapper;
 
     @Autowired
-    public CashController(DepositCashUseCase depositCashUseCase,
-                          WithdrawCashUseCase withdrawCashUseCase,
-                          GetHomePageUseCase getHomePageUseCase,
-                          HomePageModelFactory homePageModelFactory,
-                          CashWebMapper cashWebMapper) {
+    public WalletController(DepositCashUseCase depositCashUseCase,
+                            WithdrawCashUseCase withdrawCashUseCase,
+                            GetHomePageUseCase getHomePageUseCase,
+                            HomePageModelFactory homePageModelFactory,
+                            CashWebMapper cashWebMapper) {
         this.depositCashUseCase = depositCashUseCase;
         this.withdrawCashUseCase = withdrawCashUseCase;
         this.getHomePageUseCase = getHomePageUseCase;

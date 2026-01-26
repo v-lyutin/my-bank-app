@@ -2,6 +2,7 @@ package com.amit.mybankapp.cash.application.processor.impl;
 
 import com.amit.mybankapp.cash.application.processor.WalletCommandProcessor;
 import com.amit.mybankapp.commons.client.AccountsClient;
+import com.amit.mybankapp.commons.client.dto.wallet.WalletOperationRequest;
 import com.amit.mybankapp.commons.client.dto.wallet.WalletOperationResponse;
 import com.amit.mybankapp.commons.model.type.WalletOperationType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,7 @@ public class DepositProcessor implements WalletCommandProcessor {
 
     @Override
     public WalletOperationResponse process(BigDecimal amount) {
-        WalletOperationResponse walletOperationResponse = this.accountsClient.deposit(amount);
+        WalletOperationResponse walletOperationResponse = this.accountsClient.deposit(new WalletOperationRequest(amount));
         // this.notificationsClient.sendDepositCreatedNotification(NotificationRequest.deposit(walletResponse.customerId(), walletResponse.walletId(), amount));
         return walletOperationResponse;
     }

@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: front-controller
+  threads:
+    virtual:
+      enabled: true
+server:
+  port: ${SERVER_PORT:8084}
+mybank:
+  clients:
+    accounts-service:
+      base-url: http://localhost:8081
+    wallet-service:
+      base-url: http://localhost:8082
+    transfer-service:
+      base-url: http://localhost:8083

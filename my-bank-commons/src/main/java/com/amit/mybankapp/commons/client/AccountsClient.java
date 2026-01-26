@@ -5,10 +5,10 @@ import com.amit.mybankapp.commons.client.dto.accounts.CustomerResponse;
 import com.amit.mybankapp.commons.client.dto.accounts.UpdateProfileRequest;
 import com.amit.mybankapp.commons.client.dto.transfer.CreateTransferRequest;
 import com.amit.mybankapp.commons.client.dto.transfer.CreateTransferResponse;
+import com.amit.mybankapp.commons.client.dto.wallet.WalletOperationRequest;
 import com.amit.mybankapp.commons.client.dto.wallet.WalletOperationResponse;
 import com.amit.mybankapp.commons.client.dto.wallet.WalletResponse;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 public interface AccountsClient {
@@ -21,10 +21,10 @@ public interface AccountsClient {
 
     CreateTransferResponse createTransfer(CreateTransferRequest createTransferRequest);
 
-    WalletResponse getWalletByCurrentCustomer();
+    WalletResponse getPrimaryWalletForCurrentUser();
 
-    WalletOperationResponse deposit(BigDecimal amount);
+    WalletOperationResponse deposit(WalletOperationRequest walletOperationRequest);
 
-    WalletOperationResponse withdraw(BigDecimal amount);
+    WalletOperationResponse withdraw(WalletOperationRequest walletOperationRequest);
 
 }

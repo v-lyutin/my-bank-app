@@ -1,4 +1,4 @@
-package com.amit.mybankapp.frontcontroller.application.service.util;
+package com.amit.mybankapp.frontcontroller.application.usecase.util;
 
 import com.amit.mybankapp.frontcontroller.application.exception.ValidationException;
 

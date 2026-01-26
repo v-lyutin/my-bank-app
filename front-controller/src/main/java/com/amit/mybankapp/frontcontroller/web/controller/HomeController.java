@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class HomeController {
 
     private final GetHomePageUseCase getHomePageUseCase;
+
     private final HomePageModelFactory homePageModelFactory;
 
     @Autowired

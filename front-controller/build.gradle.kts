@@ -4,7 +4,7 @@ plugins {
 }
 
 dependencies {
-    implementation(project(":my-bank-commons"))
+    implementation(project(":my-bank-service-clients"))
 
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")

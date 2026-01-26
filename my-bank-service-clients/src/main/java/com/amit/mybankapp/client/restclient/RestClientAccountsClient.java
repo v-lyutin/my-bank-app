@@ -6,11 +6,11 @@ import com.amit.mybankapp.commons.client.dto.accounts.CustomerResponse;
 import com.amit.mybankapp.commons.client.dto.accounts.UpdateProfileRequest;
 import com.amit.mybankapp.commons.client.dto.transfer.CreateTransferRequest;
 import com.amit.mybankapp.commons.client.dto.transfer.CreateTransferResponse;
+import com.amit.mybankapp.commons.client.dto.wallet.WalletOperationRequest;
 import com.amit.mybankapp.commons.client.dto.wallet.WalletOperationResponse;
 import com.amit.mybankapp.commons.client.dto.wallet.WalletResponse;
 import org.springframework.web.client.RestClient;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 public class RestClientAccountsClient implements AccountsClient {
@@ -57,7 +57,7 @@ public class RestClientAccountsClient implements AccountsClient {
     }
 
     @Override
-    public WalletResponse getWalletByCurrentCustomer() {
+    public WalletResponse getPrimaryWalletForCurrentUser() {
         return this.restClient.get()
                 .uri("wallets/me")
                 .retrieve()
@@ -65,19 +65,19 @@ public class RestClientAccountsClient implements AccountsClient {
     }
 
     @Override
-    public WalletOperationResponse deposit(BigDecimal amount) {
+    public WalletOperationResponse deposit(WalletOperationRequest walletOperationRequest) {
         return this.restClient.post()
                 .uri("/wallets/me/deposits")
-                .body(amount)
+                .body(walletOperationRequest)
                 .retrieve()
                 .body(WalletOperationResponse.class);
     }
 
     @Override
-    public WalletOperationResponse withdraw(BigDecimal amount) {
+    public WalletOperationResponse withdraw(WalletOperationRequest walletOperationRequest) {
         return this.restClient.post()
                 .uri("/wallets/me/withdrawals")
-                .body(amount)
+                .body(walletOperationRequest)
                 .retrieve()
                 .body(WalletOperationResponse.class);
     }
