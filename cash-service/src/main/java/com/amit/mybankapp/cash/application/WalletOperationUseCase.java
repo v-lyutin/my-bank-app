@@ -6,8 +6,10 @@ import com.amit.mybankapp.cash.application.model.WalletOperationCommand;
 import com.amit.mybankapp.cash.application.processor.WalletCommandProcessor;
 import com.amit.mybankapp.cash.application.processor.WalletCommandProcessorRegistry;
 import com.amit.mybankapp.commons.client.dto.wallet.WalletOperationResponse;
+import com.amit.mybankapp.commons.model.event.WalletOperationCompletedEvent;
 import com.amit.mybankapp.commons.model.type.WalletOperationType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -20,11 +22,15 @@ public class WalletOperationUseCase {
 
     private final WalletOperationAudit walletOperationAudit;
 
+    private final ApplicationEventPublisher applicationEventPublisher;
+
     @Autowired
     public WalletOperationUseCase(WalletCommandProcessorRegistry walletCommandProcessorRegistry,
-                                  WalletOperationAudit walletOperationAudit) {
+                                  WalletOperationAudit walletOperationAudit,
+                                  ApplicationEventPublisher applicationEventPublisher) {
         this.walletCommandProcessorRegistry = walletCommandProcessorRegistry;
         this.walletOperationAudit = walletOperationAudit;
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 
     public WalletOperationResponse deposit(BigDecimal amount) {
@@ -49,7 +55,12 @@ public class WalletOperationUseCase {
                     walletOperationResponse.customerId(),
                     amount
             );
-            return enrichWithOperationId(operationId, walletOperationResponse);
+
+            WalletOperationResponse enrichedWalletOperationResponse = enrichWithOperationId(operationId, walletOperationResponse);
+
+            this.applicationEventPublisher.publishEvent(WalletOperationCompletedEvent.from(enrichedWalletOperationResponse));
+
+            return enrichedWalletOperationResponse;
         } catch (ApiException exception) {
             this.walletOperationAudit.rejected(operationId, command.walletOperationType().name(), null, null, amount);
 

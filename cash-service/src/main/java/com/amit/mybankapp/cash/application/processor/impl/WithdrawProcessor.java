@@ -15,12 +15,9 @@ public class WithdrawProcessor implements WalletCommandProcessor {
 
     private final AccountsClient accountsClient;
 
-    // private final NotificationsClient notificationsClient;
-
     @Autowired
     public WithdrawProcessor(AccountsClient accountsClient) {
         this.accountsClient = accountsClient;
-        // this.notificationsClient = notificationsClient;
     }
 
     @Override
@@ -30,9 +27,7 @@ public class WithdrawProcessor implements WalletCommandProcessor {
 
     @Override
     public WalletOperationResponse process(BigDecimal amount) {
-        WalletOperationResponse walletOperationResponse = this.accountsClient.withdraw(new WalletOperationRequest(amount));
-        // this.notificationsClient.sendWithdrawalCreatedNotification(NotificationRequest.withdraw(walletResponse.customerId(), walletResponse.walletId(), amount));
-        return walletOperationResponse;
+        return this.accountsClient.withdraw(new WalletOperationRequest(amount));
     }
 
 }
