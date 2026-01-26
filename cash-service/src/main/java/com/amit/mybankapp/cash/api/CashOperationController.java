@@ -1,10 +1,8 @@
 package com.amit.mybankapp.cash.api;
 
-import com.amit.mybankapp.cash.api.dto.CashOperationResponse;
-import com.amit.mybankapp.cash.api.dto.MoneyOperationRequest;
-import com.amit.mybankapp.cash.api.mapper.CashOperationMapper;
 import com.amit.mybankapp.cash.application.CashOperationUseCase;
-import com.amit.mybankapp.cash.application.model.CashResult;
+import com.amit.mybankapp.commons.client.dto.wallet.WalletOperationRequest;
+import com.amit.mybankapp.commons.client.dto.wallet.WalletOperationResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,24 +17,21 @@ public class CashOperationController {
 
     private final CashOperationUseCase cashOperationUseCase;
 
-    private final CashOperationMapper cashOperationMapper;
-
     @Autowired
-    public CashOperationController(CashOperationUseCase cashOperationUseCase, CashOperationMapper cashOperationMapper) {
+    public CashOperationController(CashOperationUseCase cashOperationUseCase) {
         this.cashOperationUseCase = cashOperationUseCase;
-        this.cashOperationMapper = cashOperationMapper;
     }
 
     @PostMapping(path = "/deposits")
-    public ResponseEntity<CashOperationResponse> deposit(@Valid @RequestBody MoneyOperationRequest request) {
-        CashResult cashResult = this.cashOperationUseCase.deposit(request.amount());
-        return ResponseEntity.ok(this.cashOperationMapper.toCashOperationResponse(cashResult));
+    public ResponseEntity<WalletOperationResponse> deposit(@Valid @RequestBody WalletOperationRequest request) {
+        WalletOperationResponse walletOperationResponse = this.cashOperationUseCase.deposit(request.amount());
+        return ResponseEntity.ok(walletOperationResponse);
     }
 
     @PostMapping(path = "/withdrawals")
-    public ResponseEntity<CashOperationResponse> withdraw(@Valid @RequestBody MoneyOperationRequest request) {
-        CashResult cashResult = this.cashOperationUseCase.withdraw(request.amount());
-        return ResponseEntity.ok(this.cashOperationMapper.toCashOperationResponse(cashResult));
+    public ResponseEntity<WalletOperationResponse> withdraw(@Valid @RequestBody WalletOperationRequest request) {
+        WalletOperationResponse walletOperationResponse = this.cashOperationUseCase.withdraw(request.amount());
+        return ResponseEntity.ok(walletOperationResponse);
     }
 
 }

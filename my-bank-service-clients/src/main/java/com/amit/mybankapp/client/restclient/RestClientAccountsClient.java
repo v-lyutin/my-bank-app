@@ -6,6 +6,7 @@ import com.amit.mybankapp.commons.client.dto.accounts.CustomerResponse;
 import com.amit.mybankapp.commons.client.dto.accounts.UpdateProfileRequest;
 import com.amit.mybankapp.commons.client.dto.transfer.CreateTransferRequest;
 import com.amit.mybankapp.commons.client.dto.transfer.CreateTransferResponse;
+import com.amit.mybankapp.commons.client.dto.wallet.WalletOperationResponse;
 import com.amit.mybankapp.commons.client.dto.wallet.WalletResponse;
 import org.springframework.web.client.RestClient;
 
@@ -56,21 +57,29 @@ public class RestClientAccountsClient implements AccountsClient {
     }
 
     @Override
-    public WalletResponse deposit(BigDecimal amount) {
-        return this.restClient.post()
-                .uri("/wallets/me/deposits")
-                .body(amount)
+    public WalletResponse getWalletByCurrentCustomer() {
+        return this.restClient.get()
+                .uri("wallets/me")
                 .retrieve()
                 .body(WalletResponse.class);
     }
 
     @Override
-    public WalletResponse withdraw(BigDecimal amount) {
+    public WalletOperationResponse deposit(BigDecimal amount) {
+        return this.restClient.post()
+                .uri("/wallets/me/deposits")
+                .body(amount)
+                .retrieve()
+                .body(WalletOperationResponse.class);
+    }
+
+    @Override
+    public WalletOperationResponse withdraw(BigDecimal amount) {
         return this.restClient.post()
                 .uri("/wallets/me/withdrawals")
                 .body(amount)
                 .retrieve()
-                .body(WalletResponse.class);
+                .body(WalletOperationResponse.class);
     }
 
 }

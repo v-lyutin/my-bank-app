@@ -1,19 +1,19 @@
 package com.amit.mybankapp.cash.application.model;
 
 import com.amit.mybankapp.cash.application.model.exception.InvalidCashCommandException;
-import com.amit.mybankapp.cash.application.model.type.CashCommandType;
+import com.amit.mybankapp.cash.application.model.type.WalletCommandType;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 public record CashCommand(
-        CashCommandType type,
+        WalletCommandType type,
         BigDecimal amount) {
 
     public CashCommand {
 
         if (type == null || amount == null) {
-            throw new InvalidCashCommandException("type/amount must not be null");
+            throw new InvalidCashCommandException("operationType/amount must not be null");
         }
 
         if (amount.signum() <= 0) {

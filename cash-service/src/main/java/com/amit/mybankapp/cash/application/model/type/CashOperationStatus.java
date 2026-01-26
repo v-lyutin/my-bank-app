@@ -1,9 +1,9 @@
 package com.amit.mybankapp.cash.application.model.type;
 
-public enum CashCommandType {
+public enum CashOperationStatus {
 
-    DEPOSIT,
+    ACCEPTED,
 
-    WITHDRAW
+    REJECTED
 
 }

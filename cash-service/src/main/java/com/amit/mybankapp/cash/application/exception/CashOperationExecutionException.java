@@ -11,7 +11,7 @@ public final class CashOperationExecutionException extends ApiException {
     private final UUID operationId;
 
     public CashOperationExecutionException(UUID operationId, Throwable cause) {
-        super("Cash operation " + operationId + " execution failed", cause);
+        super("Cash operationType " + operationId + " execution failed", cause);
         this.operationId = operationId;
     }
 

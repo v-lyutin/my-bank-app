@@ -145,7 +145,7 @@ class MoneyTest {
     }
 
     @Test
-    @DisplayName(value = "Should preserve scale after plus operation")
+    @DisplayName(value = "Should preserve scale after plus operationName")
     void plus_shouldPreserveScaleAfterOperation() {
         Money firstMoney = new Money(new BigDecimal("1"));
         Money secondMoney = new Money(new BigDecimal("2"));
@@ -157,7 +157,7 @@ class MoneyTest {
     }
 
     @Test
-    @DisplayName(value = "Should preserve scale after minus operation")
+    @DisplayName(value = "Should preserve scale after minus operationName")
     void minus_shouldPreserveScaleAfterOperation() {
         Money firstMoney = new Money(new BigDecimal("5"));
         Money secondMoney = new Money(new BigDecimal("2"));

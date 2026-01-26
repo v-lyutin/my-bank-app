@@ -5,6 +5,5 @@ import java.util.UUID;
 
 public record WalletResponse(
         UUID walletId,
-        UUID customerId,
         BigDecimal balance) {
 }

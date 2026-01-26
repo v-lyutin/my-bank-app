@@ -4,9 +4,11 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.UUID;
 
-public record CashOperationAuditRecord(
+public record WalletOperationAuditRecord(
         UUID operationId,
-        String type,
+        String operationType,
+        UUID walletId,
+        UUID customerId,
         BigDecimal amount,
         String status,
         Instant createdAt) {
