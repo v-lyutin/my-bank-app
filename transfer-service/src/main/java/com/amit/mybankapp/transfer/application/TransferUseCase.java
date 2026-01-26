@@ -1,14 +1,12 @@
 package com.amit.mybankapp.transfer.application;
 
 import com.amit.mybankapp.apierrors.server.exception.ApiException;
-import com.amit.mybankapp.transfer.application.client.accounts.AccountsClient;
-import com.amit.mybankapp.transfer.application.client.accounts.dto.AccountsTransferResponse;
-import com.amit.mybankapp.transfer.application.client.notifications.NotificationsClient;
+import com.amit.mybankapp.commons.client.AccountsClient;
+import com.amit.mybankapp.commons.client.NotificationsClient;
+import com.amit.mybankapp.commons.client.dto.transfer.CreateTransferRequest;
+import com.amit.mybankapp.commons.client.dto.transfer.CreateTransferResponse;
 import com.amit.mybankapp.transfer.application.exception.TransferExecutionException;
-import com.amit.mybankapp.transfer.application.model.TransferCommand;
-import com.amit.mybankapp.transfer.application.model.TransferResult;
 import com.amit.mybankapp.transfer.infrastructure.audit.TransferAudit;
-import com.amit.mybankapp.transfer.infrastructure.audit.model.type.TransferStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,7 +18,7 @@ public class TransferUseCase {
 
     private final AccountsClient accountsClient;
 
-    private final NotificationsClient notificationsClient;
+    // private final NotificationsClient notificationsClient;
 
     private final TransferAudit transferAudit;
 
@@ -29,31 +27,31 @@ public class TransferUseCase {
                            NotificationsClient notificationsClient,
                            TransferAudit transferAudit) {
         this.accountsClient = accountsClient;
-        this.notificationsClient = notificationsClient;
+        // this.notificationsClient = notificationsClient;
         this.transferAudit = transferAudit;
     }
 
     @Transactional
-    public TransferResult transfer(TransferCommand command) {
+    public CreateTransferResponse createTransferWithAudit(CreateTransferRequest createTransferRequest) {
         UUID transferId = UUID.randomUUID();
 
         try {
-            AccountsTransferResponse accountsTransferResponse = this.accountsClient.transfer(command.recipientCustomerId(), command.amount());
+            CreateTransferResponse createTransferResponse = this.accountsClient.createTransfer(createTransferRequest);
 
-            this.notificationsClient.sendTransferSent(accountsTransferResponse.senderCustomerId(), accountsTransferResponse.amount());
-            this.notificationsClient.sendTransferReceived(accountsTransferResponse.recipientCustomerId(), accountsTransferResponse.amount());
+            // this.notificationsClient.sendTransferSent(createTransferResponse.senderCustomerId(), createTransferResponse.amount());
+            // this.notificationsClient.sendTransferReceived(createTransferResponse.recipientCustomerId(), createTransferResponse.amount());
 
             this.transferAudit.accepted(
                     transferId,
-                    accountsTransferResponse.senderCustomerId(),
-                    accountsTransferResponse.recipientCustomerId(),
-                    accountsTransferResponse.amount()
+                    createTransferResponse.senderCustomerId(),
+                    createTransferResponse.recipientCustomerId(),
+                    createTransferResponse.amount()
             );
 
-            return new TransferResult(transferId, TransferStatus.ACCEPTED);
+            return enrichWithTransferId(transferId, createTransferResponse);
 
         } catch (ApiException exception) {
-            this.transferAudit.rejected(transferId, null, command.recipientCustomerId(), command.amount());
+            this.transferAudit.rejected(transferId, null, createTransferRequest.recipientCustomerId(), createTransferRequest.amount());
 
             if (exception.status().is4xxClientError()) {
                 throw exception;
@@ -62,9 +60,19 @@ public class TransferUseCase {
             throw new TransferExecutionException(transferId, exception);
 
         } catch (RuntimeException exception) {
-            this.transferAudit.rejected(transferId, null, command.recipientCustomerId(), command.amount());
+            this.transferAudit.rejected(transferId, null, createTransferRequest.recipientCustomerId(), createTransferRequest.amount());
             throw new TransferExecutionException(transferId, exception);
         }
+    }
+
+    private static CreateTransferResponse enrichWithTransferId(UUID transferId, CreateTransferResponse createTransferResponse) {
+        return new CreateTransferResponse(
+                transferId,
+                createTransferResponse.senderCustomerId(),
+                createTransferResponse.recipientCustomerId(),
+                createTransferResponse.amount(),
+                createTransferResponse.status()
+        );
     }
 
 }
