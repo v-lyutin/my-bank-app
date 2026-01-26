@@ -1,12 +1,12 @@
 package com.amit.mybankapp.accounts.application.customer;
 
-import com.amit.mybankapp.accounts.application.common.exception.ResourceNotFoundException;
 import com.amit.mybankapp.accounts.application.customer.model.CustomerLookup;
 import com.amit.mybankapp.accounts.application.customer.repository.CustomerRepository;
 import com.amit.mybankapp.accounts.domain.customer.Customer;
 import com.amit.mybankapp.accounts.domain.customer.vo.CustomerId;
 import com.amit.mybankapp.accounts.domain.customer.vo.Profile;
 import com.amit.mybankapp.accounts.infrastructure.provider.CurrentUserProvider;
+import com.amit.mybankapp.apierrors.server.exception.base.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,7 +29,7 @@ public class CustomerUseCase {
     @Transactional(readOnly = true)
     public Customer getCurrentCustomer() {
         CustomerId customerId = this.currentUserProvider.currentUserId();
-        return this.customerRepository.findByCustomerId(customerId).orElseThrow(() -> ResourceNotFoundException.forAccount(customerId));
+        return this.customerRepository.findByCustomerId(customerId).orElseThrow(() -> ResourceNotFoundException.forAccount(customerId.value()));
     }
 
     @Transactional

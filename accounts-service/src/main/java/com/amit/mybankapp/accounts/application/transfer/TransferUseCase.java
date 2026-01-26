@@ -1,6 +1,5 @@
 package com.amit.mybankapp.accounts.application.transfer;
 
-import com.amit.mybankapp.accounts.application.common.exception.ResourceNotFoundException;
 import com.amit.mybankapp.accounts.application.transfer.exception.InvalidTransferException;
 import com.amit.mybankapp.accounts.application.transfer.model.TransferResult;
 import com.amit.mybankapp.accounts.application.wallet.repository.WalletRepository;
@@ -8,6 +7,7 @@ import com.amit.mybankapp.accounts.domain.customer.vo.CustomerId;
 import com.amit.mybankapp.accounts.domain.wallet.Wallet;
 import com.amit.mybankapp.accounts.domain.wallet.vo.Money;
 import com.amit.mybankapp.accounts.infrastructure.provider.CurrentUserProvider;
+import com.amit.mybankapp.apierrors.server.exception.base.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -79,7 +79,7 @@ public class TransferUseCase {
 
     private Wallet lockPrimaryWallet(CustomerId customerId) {
         return this.walletRepository.findPrimaryByCustomerIdForUpdate(customerId)
-                .orElseThrow(() -> ResourceNotFoundException.forWalletOfCustomer(customerId));
+                .orElseThrow(() -> ResourceNotFoundException.forWalletOfCustomer(customerId.value()));
     }
 
     private record LockedWalletPair(Wallet senderWallet, Wallet recipientWallet) {}

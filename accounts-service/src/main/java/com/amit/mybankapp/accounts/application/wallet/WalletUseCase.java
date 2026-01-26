@@ -1,12 +1,12 @@
 package com.amit.mybankapp.accounts.application.wallet;
 
-import com.amit.mybankapp.accounts.application.common.exception.ResourceNotFoundException;
 import com.amit.mybankapp.accounts.application.wallet.model.WalletOperationResult;
 import com.amit.mybankapp.accounts.application.wallet.repository.WalletRepository;
 import com.amit.mybankapp.accounts.domain.customer.vo.CustomerId;
 import com.amit.mybankapp.accounts.domain.wallet.Wallet;
 import com.amit.mybankapp.accounts.domain.wallet.vo.Money;
 import com.amit.mybankapp.accounts.infrastructure.provider.CurrentUserProvider;
+import com.amit.mybankapp.apierrors.server.exception.base.ResourceNotFoundException;
 import com.amit.mybankapp.commons.model.type.WalletOperationType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,7 +29,7 @@ public class WalletUseCase {
     public Wallet getPrimaryWalletForCurrentUser() {
         CustomerId customerId = this.currentUserProvider.currentUserId();
         return this.walletRepository.findPrimaryByCustomerId(customerId)
-                .orElseThrow(() -> ResourceNotFoundException.forWalletOfCustomer(customerId));
+                .orElseThrow(() -> ResourceNotFoundException.forWalletOfCustomer(customerId.value()));
     }
 
     @Transactional
@@ -64,7 +64,7 @@ public class WalletUseCase {
     protected Wallet getPrimaryWalletForUpdate() {
         CustomerId customerId = this.currentUserProvider.currentUserId();
         return this.walletRepository.findPrimaryByCustomerIdForUpdate(customerId)
-                .orElseThrow(() -> ResourceNotFoundException.forWalletOfCustomer(customerId));
+                .orElseThrow(() -> ResourceNotFoundException.forWalletOfCustomer(customerId.value()));
     }
 
 }
