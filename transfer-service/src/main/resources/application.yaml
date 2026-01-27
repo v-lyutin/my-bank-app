@@ -13,3 +13,5 @@ mybank:
   clients:
     accounts-service:
       base-url: http://localhost:8081
+    notifications-service:
+      base-url: http://localhost:8085

@@ -24,11 +24,11 @@ public class WalletOperationCompletedEventListener {
 
     @Async
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
-    public void on(WalletOperationCompletedEvent event) {
+    public void on(WalletOperationCompletedEvent walletOperationCompletedEvent) {
         try {
-            // this.notificationsClient.sendWalletOperationCompleted(event);
+            this.notificationsClient.sendWalletOperationCompletedEvent(walletOperationCompletedEvent);
         } catch (RuntimeException exception) {
-            LOGGER.warn("Failed to send wallet operation notification. operationId={}", event.operationId(), exception);
+            LOGGER.warn("Failed to send wallet operation notification. operationId={}", walletOperationCompletedEvent.operationId(), exception);
         }
     }
 

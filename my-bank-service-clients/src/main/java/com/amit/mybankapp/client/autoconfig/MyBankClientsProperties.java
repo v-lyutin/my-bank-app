@@ -6,7 +6,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public record MyBankClientsProperties(
         Service accountsService,
         Service transferService,
-        Service walletService) {
+        Service walletService,
+        Service notificationsService) {
 
     public record Service(String baseUrl) {}
 

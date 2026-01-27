@@ -26,7 +26,7 @@ public class TransferCreatedEventListener {
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void on(TransferCreatedEvent transferCreatedEvent) {
         try {
-            //
+            this.notificationsClient.sendTransferCreatedEvent(transferCreatedEvent);
         } catch (RuntimeException exception) {
             LOGGER.warn("Failed to send transfer notifications for transferId={}", transferCreatedEvent.transferId(), exception);
         }
