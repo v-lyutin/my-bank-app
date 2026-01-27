@@ -2,12 +2,13 @@ package com.amit.mybankapp.transfer.application;
 
 import com.amit.mybankapp.apierrors.server.exception.ApiException;
 import com.amit.mybankapp.commons.client.AccountsClient;
-import com.amit.mybankapp.commons.client.NotificationsClient;
 import com.amit.mybankapp.commons.client.dto.transfer.CreateTransferRequest;
 import com.amit.mybankapp.commons.client.dto.transfer.CreateTransferResponse;
+import com.amit.mybankapp.commons.model.event.TransferCreatedEvent;
 import com.amit.mybankapp.transfer.application.exception.TransferExecutionException;
 import com.amit.mybankapp.transfer.infrastructure.audit.TransferAudit;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,16 +19,16 @@ public class TransferUseCase {
 
     private final AccountsClient accountsClient;
 
-    // private final NotificationsClient notificationsClient;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     private final TransferAudit transferAudit;
 
     @Autowired
     public TransferUseCase(AccountsClient accountsClient,
-                           NotificationsClient notificationsClient,
+                           ApplicationEventPublisher applicationEventPublisher,
                            TransferAudit transferAudit) {
         this.accountsClient = accountsClient;
-        // this.notificationsClient = notificationsClient;
+        this.applicationEventPublisher = applicationEventPublisher;
         this.transferAudit = transferAudit;
     }
 
@@ -38,9 +39,6 @@ public class TransferUseCase {
         try {
             CreateTransferResponse createTransferResponse = this.accountsClient.createTransfer(createTransferRequest);
 
-            // this.notificationsClient.sendTransferSent(createTransferResponse.senderCustomerId(), createTransferResponse.amount());
-            // this.notificationsClient.sendTransferReceived(createTransferResponse.recipientCustomerId(), createTransferResponse.amount());
-
             this.transferAudit.accepted(
                     transferId,
                     createTransferResponse.senderCustomerId(),
@@ -48,8 +46,11 @@ public class TransferUseCase {
                     createTransferResponse.amount()
             );
 
-            return enrichWithTransferId(transferId, createTransferResponse);
+            CreateTransferResponse enrichedCreateTransferResponse = enrichWithTransferId(transferId, createTransferResponse);
 
+            this.applicationEventPublisher.publishEvent(TransferCreatedEvent.from(enrichedCreateTransferResponse));
+
+            return enrichedCreateTransferResponse;
         } catch (ApiException exception) {
             this.transferAudit.rejected(transferId, null, createTransferRequest.recipientCustomerId(), createTransferRequest.amount());
 
@@ -58,7 +59,6 @@ public class TransferUseCase {
             }
 
             throw new TransferExecutionException(transferId, exception);
-
         } catch (RuntimeException exception) {
             this.transferAudit.rejected(transferId, null, createTransferRequest.recipientCustomerId(), createTransferRequest.amount());
             throw new TransferExecutionException(transferId, exception);

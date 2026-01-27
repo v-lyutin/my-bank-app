@@ -11,6 +11,7 @@ import com.amit.mybankapp.commons.model.type.WalletOperationType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -41,6 +42,7 @@ public class WalletOperationUseCase {
         return this.executeWithAudit(new WalletOperationCommand(WalletOperationType.WITHDRAW, amount));
     }
 
+    @Transactional
     public WalletOperationResponse executeWithAudit(WalletOperationCommand command) {
         UUID operationId = UUID.randomUUID();
         BigDecimal amount = command.amount();
