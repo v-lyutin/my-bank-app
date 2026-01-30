@@ -37,14 +37,12 @@ public class ServiceToServiceRestClientSecurityConfiguration {
 
     @Bean
     public RestClientCustomizer serviceBearerTokenRestClientCustomizer(OAuth2AuthorizedClientManager authorizedClientManager, MyBankClientsProperties myBankClientsProperties) {
-        URI accountsServiceBaseUri = URI.create(myBankClientsProperties.accountsService().baseUrl());
+        String accountsServiceId = myBankClientsProperties.accountsService().serviceId();
 
         return restClientBuilder -> restClientBuilder.requestInterceptor((request, body, execution) -> {
 
             URI requestUri = request.getURI();
-            boolean isAccountsCall =
-                    Objects.equals(requestUri.getHost(), accountsServiceBaseUri.getHost()) &&
-                            requestUri.getPort() == accountsServiceBaseUri.getPort();
+            boolean isAccountsCall = accountsServiceId.equalsIgnoreCase(requestUri.getHost());
 
             if (!isAccountsCall) {
                 return execution.execute(request, body);

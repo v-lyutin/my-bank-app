@@ -9,6 +9,8 @@ import com.amit.mybankapp.cash.infrastructure.provider.CurrentUserProvider;
 import com.amit.mybankapp.commons.client.dto.wallet.WalletOperationResponse;
 import com.amit.mybankapp.commons.model.event.WalletOperationCompletedEvent;
 import com.amit.mybankapp.commons.model.type.WalletOperationType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -20,6 +22,7 @@ import java.util.UUID;
 @Service
 public class WalletOperationUseCase {
 
+    private static final Logger log = LoggerFactory.getLogger(WalletOperationUseCase.class);
     private final WalletCommandProcessorRegistry walletCommandProcessorRegistry;
 
     private final WalletOperationAudit walletOperationAudit;
@@ -54,6 +57,14 @@ public class WalletOperationUseCase {
         UUID operationId = UUID.randomUUID();
         BigDecimal amount = command.amount();
 
+        log.info(
+                "Wallet operation started: operationId={}, type={}, customerId={}, amount={}",
+                operationId,
+                command.walletOperationType(),
+                currentCustomerId,
+                amount
+        );
+
         try {
             WalletCommandProcessor walletCommandProcessor = this.walletCommandProcessorRegistry.get(command.walletOperationType());
             WalletOperationResponse walletOperationResponse = walletCommandProcessor.process(currentCustomerId, amount);
@@ -65,12 +76,27 @@ public class WalletOperationUseCase {
                     amount
             );
 
+            log.info(
+                    "Wallet operation succeeded: operationId={}, walletId={}, customerId={}, amount={}",
+                    operationId,
+                    walletOperationResponse.walletId(),
+                    walletOperationResponse.customerId(),
+                    walletOperationResponse.amount()
+            );
+
             WalletOperationResponse enrichedWalletOperationResponse = enrichWithOperationId(operationId, walletOperationResponse);
 
             this.applicationEventPublisher.publishEvent(WalletOperationCompletedEvent.from(enrichedWalletOperationResponse));
 
             return enrichedWalletOperationResponse;
         } catch (ApiException exception) {
+            log.error(
+                    "Wallet operation failed with ApiException: operationId={}, type={}, status={}, message={}",
+                    operationId,
+                    command.walletOperationType(),
+                    exception.status(),
+                    exception.getMessage()
+            );
             this.walletOperationAudit.rejected(operationId, command.walletOperationType().name(), null, currentCustomerId, amount);
 
             if (exception.status().is4xxClientError()) {
@@ -80,6 +106,13 @@ public class WalletOperationUseCase {
             throw new WalletOperationExecutionException(operationId, exception);
 
         } catch (RuntimeException exception) {
+            log.error(
+                    "Wallet operation failed with unexpected exception: operationId={}, type={}, customerId={}",
+                    operationId,
+                    command.walletOperationType(),
+                    currentCustomerId,
+                    exception
+            );
             this.walletOperationAudit.rejected(operationId, command.walletOperationType().name(), null, currentCustomerId, amount);
             throw new WalletOperationExecutionException(operationId, exception);
         }

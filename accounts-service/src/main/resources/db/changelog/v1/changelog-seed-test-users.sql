@@ -10,7 +10,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 -- Данные одним блоком
 WITH seed(customer_id, login, first_name, last_name, birth_date, balance) AS (
   VALUES
-    ('110e74af-aaba-4b96-a56e-b268b56ece54'::uuid, 'vladislav.lyutin', 'Vladislav', 'Lyutin', '1995-01-10'::date, 10000.00::numeric),
+    ('352de5c7-09a7-4ac9-aae4-9cfcae666a83'::uuid, 'vladislav.lyutin', 'Vladislav', 'Lyutin', '1995-01-10'::date, 10000.00::numeric),
     ('1069d840-1c6c-4b9e-8c7d-c5a88df238bf'::uuid, 'ivan.ivanov',     'Ivan',      'Ivanov', '1993-05-12'::date,  1000.00::numeric),
     ('991a4452-24b0-4829-9dff-e7aba99f6512'::uuid, 'walter.white',    'Walter',    'White',  '1990-09-20'::date,   500.00::numeric)
 ),

@@ -1,5 +1,9 @@
 server:
   port: ${SERVER_PORT:8080}
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
 spring:
   application:
     name: api-gateway
@@ -15,16 +19,16 @@ spring:
         webflux:
           routes:
             - id: cash-ui
-              uri: http://localhost:8082
+              uri: lb://cash-service
               predicates:
                 - Path=/customers/me/deposits,/customers/me/withdrawals
 
             - id: transfer-ui
-              uri: http://localhost:8083
+              uri: lb://transfer-service
               predicates:
                 - Path=/customers/me/transfers
 
             - id: accounts-ui
-              uri: http://localhost:8081
+              uri: lb://accounts-service
               predicates:
                 - Path=/customers/me,/customers/me/profile,/customers/me/recipient-candidates,/wallets/me

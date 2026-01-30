@@ -9,6 +9,6 @@ public record MyBankClientsProperties(
         Service walletService,
         Service notificationsService) {
 
-    public record Service(String baseUrl) {}
+    public record Service(String serviceId) {}
 
 }
