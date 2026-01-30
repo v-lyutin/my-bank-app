@@ -1,15 +1,22 @@
 <div xmlns:th="http://www.thymeleaf.org"
      th:fragment="card(cashForm, cashSuccess, cashError)"
      class="card h-100">
+
     <div class="card-body p-4">
+
         <h2 class="h5 card-title mb-3">
-            <i class="bi bi-cash-coin me-2 text-primary"></i>Cash operations
+            <i class="bi bi-cash-coin me-2 text-primary"></i>
+            Cash operations
         </h2>
 
         <div th:replace="~{fragments/ui/alerts :: success(msg=${cashSuccess})}"></div>
         <div th:replace="~{fragments/ui/alerts :: error(msg=${cashError})}"></div>
 
-        <form th:object="${cashForm}" method="post" class="vstack gap-3">
+        <form th:action="@{/cash/deposit}"
+              th:object="${cashForm}"
+              method="post"
+              class="vstack gap-3">
+
             <div th:replace="~{fragments/ui/form :: field(
                 label='Amount',
                 path='amount',
@@ -19,15 +26,24 @@
             )}"></div>
 
             <div class="d-flex gap-2 flex-wrap">
+
                 <button class="btn btn-outline-primary rounded-3 py-2 flex-grow-1"
-                        th:formaction="@{/cash/deposit}" type="submit">
-                    <i class="bi bi-arrow-down-circle me-1"></i>Deposit
+                        th:formaction="@{/cash/deposit}"
+                        type="submit">
+                    <i class="bi bi-arrow-down-circle me-1"></i>
+                    Deposit
                 </button>
+
                 <button class="btn btn-outline-danger rounded-3 py-2 flex-grow-1"
-                        th:formaction="@{/cash/withdraw}" type="submit">
-                    <i class="bi bi-arrow-up-circle me-1"></i>Withdraw
+                        th:formaction="@{/cash/withdraw}"
+                        type="submit">
+                    <i class="bi bi-arrow-up-circle me-1"></i>
+                    Withdraw
                 </button>
+
             </div>
+
         </form>
+
     </div>
 </div>

@@ -4,11 +4,12 @@ import com.amit.mybankapp.commons.client.dto.wallet.WalletOperationResponse;
 import com.amit.mybankapp.commons.model.type.WalletOperationType;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 public interface WalletCommandProcessor {
 
     WalletOperationType walletOperationType();
 
-    WalletOperationResponse process(BigDecimal amount);
+    WalletOperationResponse process(UUID customerId, BigDecimal amount);
 
 }

@@ -10,7 +10,7 @@
 
         <div th:replace="~{fragments/ui/alerts :: success(msg=${profileSuccess})}"></div>
 
-        <form th:action="@{/profile}" th:object="${profileForm}" method="put" class="vstack gap-3">
+        <form th:action="@{/profile}" th:object="${profileForm}" method="post" class="vstack gap-3">
 
             <div>
                 <label class="form-label text-secondary small mb-1">Login</label>

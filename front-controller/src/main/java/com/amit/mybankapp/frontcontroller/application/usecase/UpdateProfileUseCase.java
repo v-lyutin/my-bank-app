@@ -28,7 +28,7 @@ public class UpdateProfileUseCase {
                 command.birthDate()
         );
 
-        this.accountsClient.updateProfile(updateProfileRequest);
+        this.accountsClient.updateProfileForCurrentCustomer(updateProfileRequest);
     }
 
 }

@@ -28,10 +28,7 @@ public class TransferUseCase {
     }
 
     @Transactional
-    public TransferResult transfer(UUID recipientCustomerIdRaw, Money amount) {
-        CustomerId senderCustomerId = this.currentUserProvider.currentUserId();
-        CustomerId recipientCustomerId = new CustomerId(recipientCustomerIdRaw);
-
+    public TransferResult transfer(CustomerId senderCustomerId, CustomerId recipientCustomerId, Money amount) {
         if (senderCustomerId.equals(recipientCustomerId)) {
             throw new InvalidTransferException("cannot transfer to self");
         }

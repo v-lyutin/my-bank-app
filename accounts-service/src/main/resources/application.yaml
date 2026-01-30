@@ -1,6 +1,11 @@
 spring:
   application:
     name: accounts-service
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:18080/realms/my-bank
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yaml
     enabled: true

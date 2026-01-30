@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 @Component
 public class WithdrawProcessor implements WalletCommandProcessor {
@@ -26,8 +27,8 @@ public class WithdrawProcessor implements WalletCommandProcessor {
     }
 
     @Override
-    public WalletOperationResponse process(BigDecimal amount) {
-        return this.accountsClient.withdraw(new WalletOperationRequest(amount));
+    public WalletOperationResponse process(UUID customerId, BigDecimal amount) {
+        return this.accountsClient.withdraw(customerId, new WalletOperationRequest(amount));
     }
 
 }

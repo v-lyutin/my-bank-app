@@ -44,6 +44,7 @@ public class WalletController {
         this.cashWebMapper = cashWebMapper;
     }
 
+
     @PostMapping(path = "/cash/deposit")
     public String deposit(@Valid @ModelAttribute("cashForm") CashForm form,
                           BindingResult bindingResult,

@@ -24,7 +24,7 @@ public class GetHomePageUseCase {
     public HomePageResult getHomePage() {
         CustomerResponse currentCustomer = this.accountsClient.getCurrentCustomer();
         WalletResponse wallet = this.accountsClient.getPrimaryWalletForCurrentUser();
-        List<CustomerLookupResponse> recipients = this.accountsClient.getTransferRecipients();
+        List<CustomerLookupResponse> recipients = this.accountsClient.getTransferRecipientsByCurrentCustomer();
 
         return new HomePageResult(
                 toCurrentCustomerView(currentCustomer),

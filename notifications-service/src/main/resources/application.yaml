@@ -6,9 +6,3 @@ spring:
       enabled: true
 server:
   port: ${SERVER_PORT:8085}
-mybank:
-  clients:
-    accounts-service:
-      base-url: http://localhost:8081
-    notifications-service:
-      base-url: http://localhost:8085

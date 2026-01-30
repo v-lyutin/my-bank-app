@@ -1,6 +1,21 @@
 spring:
   application:
     name: cash-service
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:18080/realms/my-bank
+      client:
+        provider:
+          keycloak:
+            issuer-uri: http://localhost:18080/realms/my-bank
+        registration:
+          cash-service:
+            provider: keycloak
+            client-id: cash-service
+            client-secret: ${KEYCLOAK_CASH_SERVICE_SECRET:PhDAIVJFEz813AXy45gq3W7hxdatEXeS}
+            authorization-grant-type: client_credentials
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yaml
     enabled: true

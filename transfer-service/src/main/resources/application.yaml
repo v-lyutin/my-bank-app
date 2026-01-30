@@ -1,6 +1,21 @@
 spring:
   application:
     name: transfer-service
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:18080/realms/my-bank
+      client:
+        provider:
+          keycloak:
+            issuer-uri: http://localhost:18080/realms/my-bank
+        registration:
+          transfer-service:
+            provider: keycloak
+            client-id: transfer-service
+            client-secret: ${KEYCLOAK_TRANSFER_SERVICE_SECRET:H9jUYGKxheZWpTbAy014O8deed3Ix1y4}
+            authorization-grant-type: client_credentials
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yaml
     enabled: true

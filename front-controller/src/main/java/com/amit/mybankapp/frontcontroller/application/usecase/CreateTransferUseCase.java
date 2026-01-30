@@ -34,7 +34,7 @@ public class CreateTransferUseCase {
             throw new ValidationException("You cannot transfer money to yourself");
         }
 
-        CreateTransferRequest createTransferRequest = new CreateTransferRequest(command.recipientCustomerId(), command.amount());
+        CreateTransferRequest createTransferRequest = new CreateTransferRequest(null, command.recipientCustomerId(), command.amount());
         CreateTransferResponse createTransferResponse = this.transferClient.createTransfer(createTransferRequest);
 
         return new CreateTransferResult(createTransferResponse.transferId(), createTransferResponse.status());

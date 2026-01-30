@@ -3,6 +3,7 @@ package com.amit.mybankapp.accounts.api.transfer;
 import com.amit.mybankapp.accounts.api.transfer.mapper.TransferMapper;
 import com.amit.mybankapp.accounts.application.transfer.TransferUseCase;
 import com.amit.mybankapp.accounts.application.transfer.model.TransferResult;
+import com.amit.mybankapp.accounts.domain.customer.vo.CustomerId;
 import com.amit.mybankapp.accounts.domain.wallet.vo.Money;
 import com.amit.mybankapp.commons.client.dto.transfer.CreateTransferRequest;
 import com.amit.mybankapp.commons.client.dto.transfer.CreateTransferResponse;
@@ -15,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(path = "/transfers")
+@RequestMapping(path = "/internal/transfers")
 public class TransferController {
 
     private final TransferUseCase transferUseCase;
@@ -31,7 +32,10 @@ public class TransferController {
     // transfer-service only — internal
     @PostMapping
     public ResponseEntity<CreateTransferResponse> createTransfer(@Valid @RequestBody CreateTransferRequest request) {
-        TransferResult result = this.transferUseCase.transfer(request.recipientCustomerId(), Money.of(request.amount()));
+        TransferResult result = this.transferUseCase.transfer(
+                CustomerId.of(request.senderCustomerId()),
+                CustomerId.of(request.recipientCustomerId()),
+                Money.of(request.amount()));
         return ResponseEntity.ok(this.transferMapper.toTransferResponse(result));
     }
 

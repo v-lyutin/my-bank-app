@@ -3,6 +3,7 @@ package com.amit.mybankapp.accounts.api.customer;
 import com.amit.mybankapp.accounts.api.customer.mapper.CustomerMapper;
 import com.amit.mybankapp.accounts.application.customer.CustomerUseCase;
 import com.amit.mybankapp.accounts.domain.customer.Customer;
+import com.amit.mybankapp.accounts.domain.customer.vo.CustomerId;
 import com.amit.mybankapp.accounts.domain.customer.vo.Profile;
 import com.amit.mybankapp.commons.client.dto.accounts.CustomerLookupResponse;
 import com.amit.mybankapp.commons.client.dto.accounts.CustomerResponse;
@@ -13,35 +14,42 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
-@RequestMapping(path = "/customers/me")
-public class CurrentCustomerResource {
+@RequestMapping
+public class CustomerResource {
 
     private final CustomerUseCase customerUseCase;
 
     private final CustomerMapper customerMapper;
 
     @Autowired
-    public CurrentCustomerResource(CustomerUseCase customerUseCase, CustomerMapper customerMapper) {
+    public CustomerResource(CustomerUseCase customerUseCase, CustomerMapper customerMapper) {
         this.customerUseCase = customerUseCase;
         this.customerMapper = customerMapper;
     }
 
-    @GetMapping
+    @GetMapping(path = "/internal/customers/{customerId}")
+    public ResponseEntity<CustomerResponse> getCustomerByCustomerId(@PathVariable(name = "customerId") UUID customerId) {
+        Customer customer = this.customerUseCase.getCustomerByCustomerId(CustomerId.of(customerId));
+        return ResponseEntity.ok(this.customerMapper.toCustomerResponse(customer));
+    }
+
+    @GetMapping(path = "/customers/me")
     public ResponseEntity<CustomerResponse> getCurrentCustomer() {
         Customer customer = this.customerUseCase.getCurrentCustomer();
         return ResponseEntity.ok(this.customerMapper.toCustomerResponse(customer));
     }
 
-    @PutMapping(path = "/profile")
-    public ResponseEntity<CustomerResponse> updateCurrentProfile(@Valid @RequestBody UpdateProfileRequest request) {
+    @PutMapping(path = "/customers/me/profile")
+    public ResponseEntity<CustomerResponse> updateProfileForCurrentCustomer(@Valid @RequestBody UpdateProfileRequest request) {
         Profile profile = this.customerMapper.toProfile(request);
-        Customer updated = this.customerUseCase.updateCurrentProfile(profile);
-        return ResponseEntity.ok(this.customerMapper.toCustomerResponse(updated));
+        Customer updatedCustomer = this.customerUseCase.updateProfileForCurrentCustomer(profile);
+        return ResponseEntity.ok(this.customerMapper.toCustomerResponse(updatedCustomer));
     }
 
-    @GetMapping(path = "/recipient-candidates")
+    @GetMapping(path = "/customers/me/recipient-candidates")
     public ResponseEntity<List<CustomerLookupResponse>> getRecipientCandidatesForCurrentCustomer() {
         List<CustomerLookupResponse> response = this.customerUseCase.getRecipientCandidatesForCurrentCustomer()
                 .stream()

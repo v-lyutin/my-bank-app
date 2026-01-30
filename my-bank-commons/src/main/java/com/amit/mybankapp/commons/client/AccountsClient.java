@@ -10,21 +10,24 @@ import com.amit.mybankapp.commons.client.dto.wallet.WalletOperationResponse;
 import com.amit.mybankapp.commons.client.dto.wallet.WalletResponse;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface AccountsClient {
 
+    CustomerResponse getCustomerByCustomerId(UUID customerId);
+
     CustomerResponse getCurrentCustomer();
 
-    CustomerResponse updateProfile(UpdateProfileRequest updateProfileRequest);
+    CustomerResponse updateProfileForCurrentCustomer(UpdateProfileRequest updateProfileRequest);
 
-    List<CustomerLookupResponse> getTransferRecipients();
+    List<CustomerLookupResponse> getTransferRecipientsByCurrentCustomer();
 
     CreateTransferResponse createTransfer(CreateTransferRequest createTransferRequest);
 
     WalletResponse getPrimaryWalletForCurrentUser();
 
-    WalletOperationResponse deposit(WalletOperationRequest walletOperationRequest);
+    WalletOperationResponse deposit(UUID customerId, WalletOperationRequest walletOperationRequest);
 
-    WalletOperationResponse withdraw(WalletOperationRequest walletOperationRequest);
+    WalletOperationResponse withdraw(UUID customerId, WalletOperationRequest walletOperationRequest);
 
 }

@@ -27,14 +27,14 @@ public class WalletUseCase {
 
     @Transactional(readOnly = true)
     public Wallet getPrimaryWalletForCurrentUser() {
-        CustomerId customerId = this.currentUserProvider.currentUserId();
-        return this.walletRepository.findPrimaryByCustomerId(customerId)
-                .orElseThrow(() -> ResourceNotFoundException.forWalletOfCustomer(customerId.value()));
+        CustomerId currentCustomerId = this.currentUserProvider.currentUserId();
+        return this.walletRepository.findPrimaryByCustomerId(currentCustomerId)
+                .orElseThrow(() -> ResourceNotFoundException.forWalletOfCustomer(currentCustomerId.value()));
     }
 
     @Transactional
-    public WalletOperationResult deposit(Money amount) {
-        Wallet wallet = this.getPrimaryWalletForUpdate();
+    public WalletOperationResult deposit(CustomerId customerId, Money amount) {
+        Wallet wallet = this.getPrimaryWalletForUpdate(customerId);
         wallet.deposit(amount);
         this.walletRepository.updateBalance(wallet);
         return new WalletOperationResult(
@@ -47,8 +47,8 @@ public class WalletUseCase {
     }
 
     @Transactional
-    public WalletOperationResult withdraw(Money amount) {
-        Wallet wallet = this.getPrimaryWalletForUpdate();
+    public WalletOperationResult withdraw(CustomerId customerId, Money amount) {
+        Wallet wallet = this.getPrimaryWalletForUpdate(customerId);
         wallet.withdraw(amount);
         this.walletRepository.updateBalance(wallet);
         return new WalletOperationResult(
@@ -61,8 +61,7 @@ public class WalletUseCase {
     }
 
     @Transactional
-    protected Wallet getPrimaryWalletForUpdate() {
-        CustomerId customerId = this.currentUserProvider.currentUserId();
+    protected Wallet getPrimaryWalletForUpdate(CustomerId customerId) {
         return this.walletRepository.findPrimaryByCustomerIdForUpdate(customerId)
                 .orElseThrow(() -> ResourceNotFoundException.forWalletOfCustomer(customerId.value()));
     }

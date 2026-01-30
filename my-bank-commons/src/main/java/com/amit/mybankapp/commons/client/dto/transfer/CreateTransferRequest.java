@@ -7,6 +7,8 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 public record CreateTransferRequest(
+        UUID senderCustomerId,
+
         @NotNull(message = "recipientCustomerId must not be null")
         UUID recipientCustomerId,
 

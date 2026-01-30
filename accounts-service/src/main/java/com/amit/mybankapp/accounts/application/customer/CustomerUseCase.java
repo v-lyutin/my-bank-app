@@ -27,17 +27,22 @@ public class CustomerUseCase {
     }
 
     @Transactional(readOnly = true)
-    public Customer getCurrentCustomer() {
-        CustomerId customerId = this.currentUserProvider.currentUserId();
+    public Customer getCustomerByCustomerId(CustomerId customerId) {
         return this.customerRepository.findByCustomerId(customerId).orElseThrow(() -> ResourceNotFoundException.forAccount(customerId.value()));
     }
 
+    @Transactional(readOnly = true)
+    public Customer getCurrentCustomer() {
+        CustomerId currentCustomerId = this.currentUserProvider.currentUserId();
+        return this.customerRepository.findByCustomerId(currentCustomerId).orElseThrow(() -> ResourceNotFoundException.forAccount(currentCustomerId.value()));
+    }
+
     @Transactional
-    public Customer updateCurrentProfile(Profile profile) {
-        Customer currentCustomer = this.getCurrentCustomer();
-        currentCustomer.changeProfile(profile);
-        this.customerRepository.updateProfile(currentCustomer);
-        return currentCustomer;
+    public Customer updateProfileForCurrentCustomer(Profile profile) {
+        Customer customer = this.getCurrentCustomer();
+        customer.changeProfile(profile);
+        this.customerRepository.updateProfile(customer);
+        return customer;
     }
 
     @Transactional(readOnly = true)

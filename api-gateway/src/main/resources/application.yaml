@@ -1,0 +1,30 @@
+server:
+  port: ${SERVER_PORT:8080}
+spring:
+  application:
+    name: api-gateway
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:18080/realms/my-bank
+  cloud:
+    gateway:
+      server:
+        webflux:
+          routes:
+            - id: cash-ui
+              uri: http://localhost:8082
+              predicates:
+                - Path=/customers/me/deposits,/customers/me/withdrawals
+
+            - id: transfer-ui
+              uri: http://localhost:8083
+              predicates:
+                - Path=/customers/me/transfers
+
+            - id: accounts-ui
+              uri: http://localhost:8081
+              predicates:
+                - Path=/customers/me,/customers/me/profile,/customers/me/recipient-candidates,/wallets/me

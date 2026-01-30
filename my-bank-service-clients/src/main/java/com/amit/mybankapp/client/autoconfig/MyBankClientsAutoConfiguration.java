@@ -10,6 +10,7 @@ import com.amit.mybankapp.commons.client.TransferClient;
 import com.amit.mybankapp.commons.client.WalletClient;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.web.client.RestClientBuilderConfigurer;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestClient;
@@ -20,8 +21,8 @@ public class MyBankClientsAutoConfiguration {
 
     @Bean
     @ConditionalOnProperty(prefix = "mybank.clients.accounts-service", name = "base-url")
-    public AccountsClient customerClient(RestClient.Builder builder, MyBankClientsProperties properties) {
-        RestClient restClient = builder
+    public AccountsClient customerClient(RestClientBuilderConfigurer configurer, MyBankClientsProperties properties) {
+        RestClient restClient = configurer.configure(RestClient.builder())
                 .baseUrl(properties.accountsService().baseUrl())
                 .build();
         return new RestClientAccountsClient(restClient);
@@ -29,8 +30,8 @@ public class MyBankClientsAutoConfiguration {
 
     @Bean
     @ConditionalOnProperty(prefix = "mybank.clients.transfer-service", name = "base-url")
-    public TransferClient transferClient(RestClient.Builder builder, MyBankClientsProperties properties) {
-        RestClient restClient = builder
+    public TransferClient transferClient(RestClientBuilderConfigurer configurer, MyBankClientsProperties properties) {
+        RestClient restClient = configurer.configure(RestClient.builder())
                 .baseUrl(properties.transferService().baseUrl())
                 .build();
         return new RestClientTransferClient(restClient);
@@ -38,8 +39,8 @@ public class MyBankClientsAutoConfiguration {
 
     @Bean
     @ConditionalOnProperty(prefix = "mybank.clients.wallet-service", name = "base-url")
-    public WalletClient walletClient(RestClient.Builder builder, MyBankClientsProperties properties) {
-        RestClient restClient = builder
+    public WalletClient walletClient(RestClientBuilderConfigurer configurer, MyBankClientsProperties properties) {
+        RestClient restClient = configurer.configure(RestClient.builder())
                 .baseUrl(properties.walletService().baseUrl())
                 .build();
         return new RestClientWalletClient(restClient);
@@ -47,8 +48,8 @@ public class MyBankClientsAutoConfiguration {
 
     @Bean
     @ConditionalOnProperty(prefix = "mybank.clients.notifications-service", name = "base-url")
-    public NotificationsClient notificationsClient(RestClient.Builder builder, MyBankClientsProperties properties) {
-        RestClient restClient = builder
+    public NotificationsClient notificationsClient(RestClientBuilderConfigurer configurer, MyBankClientsProperties properties) {
+        RestClient restClient = configurer.configure(RestClient.builder())
                 .baseUrl(properties.notificationsService().baseUrl())
                 .build();
         return new RestClientNotificationsClient(restClient);

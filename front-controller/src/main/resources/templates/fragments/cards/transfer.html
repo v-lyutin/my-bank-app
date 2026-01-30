@@ -16,7 +16,7 @@
                 <select class="form-select" th:field="*{recipientCustomerId}">
                     <option value="" disabled selected>Select recipient</option>
                     <option th:each="r : ${recipients}"
-                            th:value="${r.userId}"
+                            th:value="${r.recipientId}"
                             th:text="${r.firstName + ' ' + r.lastName + ' (' + r.login + ')'}">
                     </option>
                 </select>
