@@ -1,31 +1,15 @@
 spring:
   application:
     name: front-controller
+  config:
+    import: optional:configserver:http://localhost:8888
   security:
     oauth2:
       client:
-        provider:
-          keycloak:
-            issuer-uri: http://localhost:18080/realms/my-bank
         registration:
           keycloak:
             client-id: front-ui
             authorization-grant-type: authorization_code
             scope: openid,profile,email
-  threads:
-    virtual:
-      enabled: true
 server:
   port: ${SERVER_PORT:8084}
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:8761/eureka
-mybank:
-  clients:
-    accounts-service:
-      service-id: api-gateway
-    wallet-service:
-      service-id: api-gateway
-    transfer-service:
-      service-id: api-gateway

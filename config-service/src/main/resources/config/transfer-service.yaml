@@ -1,0 +1,15 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:${TRANSFER_DB_PORT:5436}/${TRANSFER_DB_NAME:transfer}
+    username: ${TRANSFER_DB_USER:admin}
+    password: ${TRANSFER_DB_PASSWORD:password}
+    driver-class-name: org.postgresql.Driver
+  security:
+    oauth2:
+      client:
+        registration:
+          transfer-service:
+            provider: keycloak
+            client-id: transfer-service
+            client-secret: ${KEYCLOAK_TRANSFER_SERVICE_SECRET:c1GviQ8G2PRXYZ1FbEq29XdZGywY6dQ1}
+            authorization-grant-type: client_credentials

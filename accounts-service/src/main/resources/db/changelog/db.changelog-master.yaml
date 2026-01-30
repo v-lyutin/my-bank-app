@@ -11,6 +11,3 @@ databaseChangeLog:
   - include:
       file: v1/changelog-create-wallets-table.sql
       relativeToChangelogFile: true
-  - include:
-      file: v1/changelog-seed-test-users.sql
-      relativeToChangelogFile: true

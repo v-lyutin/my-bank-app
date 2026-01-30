@@ -1,12 +1,7 @@
 spring:
   application:
     name: notifications-service
-  threads:
-    virtual:
-      enabled: true
+  config:
+    import: optional:configserver:http://localhost:8888
 server:
   port: ${SERVER_PORT:8085}
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:8761/eureka

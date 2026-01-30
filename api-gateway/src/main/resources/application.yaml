@@ -1,18 +1,8 @@
-server:
-  port: ${SERVER_PORT:8080}
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:8761/eureka
 spring:
   application:
     name: api-gateway
-
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          issuer-uri: http://localhost:18080/realms/my-bank
+  config:
+    import: optional:configserver:http://localhost:8888
   cloud:
     gateway:
       server:
@@ -32,3 +22,5 @@ spring:
               uri: lb://accounts-service
               predicates:
                 - Path=/customers/me,/customers/me/profile,/customers/me/recipient-candidates,/wallets/me
+server:
+  port: ${SERVER_PORT:8080}

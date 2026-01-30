@@ -1,20 +1,10 @@
 spring:
   application:
     name: accounts-service
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          issuer-uri: http://localhost:18080/realms/my-bank
+  config:
+    import: optional:configserver:http://localhost:8888
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yaml
     enabled: true
-  threads:
-    virtual:
-      enabled: true
 server:
   port: ${SERVER_PORT:8081}
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:8761/eureka

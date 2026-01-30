@@ -1,0 +1,8 @@
+mybank:
+  clients:
+    accounts-service:
+      service-id: api-gateway
+    wallet-service:
+      service-id: api-gateway
+    transfer-service:
+      service-id: api-gateway
