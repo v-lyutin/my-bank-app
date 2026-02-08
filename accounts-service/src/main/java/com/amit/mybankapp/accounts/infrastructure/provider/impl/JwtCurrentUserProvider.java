@@ -14,6 +14,8 @@ import java.util.UUID;
 @Component
 public class JwtCurrentUserProvider implements CurrentUserProvider {
 
+    private static final String USER_ID_CLAIM = "sub";
+
     @Override
     public CustomerId currentUserId() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -21,9 +23,9 @@ public class JwtCurrentUserProvider implements CurrentUserProvider {
             throw new AuthenticationCredentialsNotFoundException("No JWT authentication");
         }
 
-        String sub = jwtAuth.getToken().getSubject();
+        String sub = jwtAuth.getToken().getClaimAsString(USER_ID_CLAIM);
         if (!StringUtils.hasText(sub)) {
-            throw new AuthenticationCredentialsNotFoundException("Missing sub claim");
+            throw new AuthenticationCredentialsNotFoundException("Missing " + USER_ID_CLAIM + " claim");
         }
 
         return CustomerId.of(UUID.fromString(sub));
