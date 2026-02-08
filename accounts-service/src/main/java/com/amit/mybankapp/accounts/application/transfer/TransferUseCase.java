@@ -7,6 +7,8 @@ import com.amit.mybankapp.accounts.domain.customer.vo.CustomerId;
 import com.amit.mybankapp.accounts.domain.wallet.Wallet;
 import com.amit.mybankapp.accounts.domain.wallet.vo.Money;
 import com.amit.mybankapp.apierrors.server.exception.base.ResourceNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +19,8 @@ import java.util.stream.Stream;
 
 @Service
 public class TransferUseCase {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(TransferUseCase.class);
 
     private static final Comparator<CustomerId> BY_CUSTOMER_ID = Comparator.comparing(CustomerId::value);
 
@@ -43,6 +47,13 @@ public class TransferUseCase {
 
         this.walletRepository.updateBalance(senderWallet);
         this.walletRepository.updateBalance(recipientWallet);
+
+        LOGGER.info(
+                "Transfer completed: senderCustomerId={}, recipientCustomerId={}, amount={}",
+                senderCustomerId.value(),
+                recipientCustomerId.value(),
+                amount.amount()
+        );
 
         return new TransferResult(
                 senderCustomerId.value(),

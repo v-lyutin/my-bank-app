@@ -8,12 +8,16 @@ import com.amit.mybankapp.accounts.domain.wallet.vo.Money;
 import com.amit.mybankapp.accounts.infrastructure.provider.CurrentUserProvider;
 import com.amit.mybankapp.apierrors.server.exception.base.ResourceNotFoundException;
 import com.amit.mybankapp.commons.model.type.WalletOperationType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class WalletUseCase {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(WalletUseCase.class);
 
     private final WalletRepository walletRepository;
 
@@ -37,6 +41,14 @@ public class WalletUseCase {
         Wallet wallet = this.getPrimaryWalletForUpdate(customerId);
         wallet.deposit(amount);
         this.walletRepository.updateBalance(wallet);
+
+        LOGGER.info(
+                "Deposit completed: customerId={}, walletId={}, amount={}",
+                wallet.getCustomerId().value(),
+                wallet.getWalletId().value(),
+                amount.amount()
+        );
+
         return new WalletOperationResult(
                 null,
                 WalletOperationType.DEPOSIT.name(),
@@ -51,6 +63,14 @@ public class WalletUseCase {
         Wallet wallet = this.getPrimaryWalletForUpdate(customerId);
         wallet.withdraw(amount);
         this.walletRepository.updateBalance(wallet);
+
+        LOGGER.info(
+                "Withdraw completed: customerId={}, walletId={}, amount={}",
+                wallet.getCustomerId().value(),
+                wallet.getWalletId().value(),
+                amount.amount()
+        );
+
         return new WalletOperationResult(
                 null,
                 WalletOperationType.WITHDRAW.name(),
