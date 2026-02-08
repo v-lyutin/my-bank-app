@@ -6,25 +6,25 @@ import com.amit.mybankapp.accounts.application.wallet.repository.WalletRepositor
 import com.amit.mybankapp.accounts.domain.customer.vo.CustomerId;
 import com.amit.mybankapp.accounts.domain.wallet.Wallet;
 import com.amit.mybankapp.accounts.domain.wallet.vo.Money;
-import com.amit.mybankapp.accounts.infrastructure.provider.CurrentUserProvider;
 import com.amit.mybankapp.apierrors.server.exception.base.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.UUID;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Stream;
 
 @Service
 public class TransferUseCase {
 
+    private static final Comparator<CustomerId> BY_CUSTOMER_ID = Comparator.comparing(CustomerId::value);
+
     private final WalletRepository walletRepository;
 
-    private final CurrentUserProvider currentUserProvider;
-
     @Autowired
-    public TransferUseCase(WalletRepository walletRepository, CurrentUserProvider currentUserProvider) {
+    public TransferUseCase(WalletRepository walletRepository) {
         this.walletRepository = walletRepository;
-        this.currentUserProvider = currentUserProvider;
     }
 
     @Transactional
@@ -52,22 +52,16 @@ public class TransferUseCase {
     }
 
     private LockedWalletPair lockBothPrimaryWallets(CustomerId senderId, CustomerId recipientId) {
+        List<CustomerId> orderedCustomerIds = Stream.of(senderId, recipientId).sorted(BY_CUSTOMER_ID).toList();
 
-        CustomerId firstCustomerId;
-        CustomerId secondCustomerId;
+        CustomerId firstCustomerId = orderedCustomerIds.get(0);
+        CustomerId secondCustomerId = orderedCustomerIds.get(1);
 
-        if (senderId.value().compareTo(recipientId.value()) <= 0) {
-            firstCustomerId = senderId;
-            secondCustomerId = recipientId;
-        } else {
-            firstCustomerId = recipientId;
-            secondCustomerId = senderId;
-        }
-
-        Wallet firstLockedWallet = this.lockPrimaryWallet(firstCustomerId);
-        Wallet secondLockedWallet = this.lockPrimaryWallet(secondCustomerId);
+        Wallet firstLockedWallet = lockPrimaryWallet(firstCustomerId);
+        Wallet secondLockedWallet = lockPrimaryWallet(secondCustomerId);
 
         Wallet senderLockedWallet = senderId.equals(firstCustomerId) ? firstLockedWallet : secondLockedWallet;
+
         Wallet recipientLockedWallet = senderId.equals(firstCustomerId) ? secondLockedWallet : firstLockedWallet;
 
         return new LockedWalletPair(senderLockedWallet, recipientLockedWallet);
