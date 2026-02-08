@@ -4,14 +4,13 @@ import com.amit.mybankapp.apierrors.server.exception.ApiException;
 import com.amit.mybankapp.commons.client.AccountsClient;
 import com.amit.mybankapp.commons.client.dto.transfer.CreateTransferRequest;
 import com.amit.mybankapp.commons.client.dto.transfer.CreateTransferResponse;
-import com.amit.mybankapp.commons.model.event.TransferCreatedEvent;
+import com.amit.mybankapp.transfer.TransferTransactionHandler;
 import com.amit.mybankapp.transfer.application.exception.TransferExecutionException;
 import com.amit.mybankapp.transfer.infrastructure.audit.TransferAudit;
 import com.amit.mybankapp.transfer.infrastructure.provider.CurrentUserProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
@@ -20,75 +19,46 @@ public class TransferUseCase {
 
     private final AccountsClient accountsClient;
 
-    private final ApplicationEventPublisher applicationEventPublisher;
-
-    private final TransferAudit transferAudit;
+    private final TransferTransactionHandler transferTransactionHandler;
 
     private final CurrentUserProvider currentUserProvider;
 
     @Autowired
     public TransferUseCase(AccountsClient accountsClient,
-                           ApplicationEventPublisher applicationEventPublisher,
-                           TransferAudit transferAudit,
+                           TransferTransactionHandler transferTransactionHandler,
                            CurrentUserProvider currentUserProvider) {
         this.accountsClient = accountsClient;
-        this.applicationEventPublisher = applicationEventPublisher;
-        this.transferAudit = transferAudit;
+        this.transferTransactionHandler = transferTransactionHandler;
         this.currentUserProvider = currentUserProvider;
     }
 
-    @Transactional
-    public CreateTransferResponse createTransferWithAudit(CreateTransferRequest createTransferRequest) {
+    public CreateTransferResponse createTransferWithAudit(CreateTransferRequest request) {
         UUID currentCustomerId = this.currentUserProvider.currentCustomerId();
         UUID transferId = UUID.randomUUID();
 
-        try {
-            CreateTransferRequest enrichedCreateTransferRequest = enrichWithSenderCustomerId(currentCustomerId, createTransferRequest);
+        CreateTransferRequest enrichedCreateTransferRequest = enrichWithSenderCustomerId(currentCustomerId, request);
 
+        try {
             CreateTransferResponse createTransferResponse = this.accountsClient.createTransfer(enrichedCreateTransferRequest);
 
-            this.transferAudit.accepted(
-                    transferId,
-                    createTransferResponse.senderCustomerId(),
-                    createTransferResponse.recipientCustomerId(),
-                    createTransferResponse.amount()
-            );
+            return this.transferTransactionHandler.onAccepted(transferId, createTransferResponse);
 
-            CreateTransferResponse enrichedCreateTransferResponse = enrichWithTransferId(transferId, createTransferResponse);
-
-            this.applicationEventPublisher.publishEvent(TransferCreatedEvent.from(enrichedCreateTransferResponse));
-
-            return enrichedCreateTransferResponse;
         } catch (ApiException exception) {
-            this.transferAudit.rejected(transferId, currentCustomerId, createTransferRequest.recipientCustomerId(), createTransferRequest.amount());
+            this.transferTransactionHandler.onRejected(transferId, currentCustomerId, request);
 
             if (exception.status().is4xxClientError()) {
                 throw exception;
             }
-
             throw new TransferExecutionException(transferId, exception);
+
         } catch (RuntimeException exception) {
-            this.transferAudit.rejected(transferId, currentCustomerId, createTransferRequest.recipientCustomerId(), createTransferRequest.amount());
+            this.transferTransactionHandler.onRejected(transferId, currentCustomerId, request);
             throw new TransferExecutionException(transferId, exception);
         }
     }
 
     private static CreateTransferRequest enrichWithSenderCustomerId(UUID currentCustomerId, CreateTransferRequest createTransferRequest) {
-        return new CreateTransferRequest(
-                currentCustomerId,
-                createTransferRequest.recipientCustomerId(),
-                createTransferRequest.amount()
-        );
-    }
-
-    private static CreateTransferResponse enrichWithTransferId(UUID transferId, CreateTransferResponse createTransferResponse) {
-        return new CreateTransferResponse(
-                transferId,
-                createTransferResponse.senderCustomerId(),
-                createTransferResponse.recipientCustomerId(),
-                createTransferResponse.amount(),
-                createTransferResponse.status()
-        );
+        return new CreateTransferRequest(currentCustomerId, createTransferRequest.recipientCustomerId(), createTransferRequest.amount());
     }
 
 }
