@@ -23,19 +23,13 @@ public record Money(BigDecimal amount) {
         return new Money(amount);
     }
 
-    public static Money zero() {
-        return new Money(BigDecimal.ZERO);
-    }
-
-    public boolean isNegative() {
-        return this.amount.signum() < 0;
-    }
-
     public Money plus(Money otherMoney) {
+        requireNonNull(otherMoney);
         return new Money(this.amount.add(otherMoney.amount));
     }
 
     public Money minus(Money otherMoney) {
+        requireNonNull(otherMoney);
         BigDecimal result = this.amount.subtract(otherMoney.amount);
 
         if (result.signum() < 0) {
@@ -43,6 +37,14 @@ public record Money(BigDecimal amount) {
         }
 
         return new Money(result);
+    }
+
+    public boolean isZero() {
+        return this.amount.signum() == 0;
+    }
+
+    private static void requireNonNull(Money otherMoney) {
+        Objects.requireNonNull(otherMoney, "otherMoney must not be null");
     }
 
 }

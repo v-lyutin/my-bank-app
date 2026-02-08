@@ -5,6 +5,7 @@ import com.amit.mybankapp.accounts.domain.wallet.Wallet;
 import com.amit.mybankapp.accounts.domain.wallet.vo.Money;
 import com.amit.mybankapp.accounts.domain.wallet.vo.WalletId;
 import com.amit.mybankapp.accounts.domain.wallet.vo.exception.InsufficientFundsException;
+import com.amit.mybankapp.accounts.domain.wallet.vo.exception.InvalidMoneyException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -74,6 +75,20 @@ class WalletTest {
     }
 
     @Test
+    @DisplayName(value = "Should throw InvalidMoneyException when deposit amount is zero")
+    void deposit_shouldThrowInvalidMoneyExceptionWhenAmountIsZero() {
+        Wallet wallet = new Wallet(
+                new WalletId(UUID.randomUUID()),
+                new CustomerId(UUID.randomUUID()),
+                new Money(new BigDecimal("10.00"))
+        );
+
+        InvalidMoneyException exception = assertThrows(InvalidMoneyException.class, () -> wallet.deposit(new Money(BigDecimal.ZERO)));
+
+        assertEquals("deposit amount must be > 0", exception.getMessage());
+    }
+
+    @Test
     @DisplayName(value = "Should deposit money and increase balance when amount is valid")
     void deposit_shouldIncreaseBalanceWhenAmountIsValid() {
         Wallet wallet = new Wallet(
@@ -102,6 +117,34 @@ class WalletTest {
         );
 
         assertEquals("amount must not be null", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName(value = "Should throw InvalidMoneyException when withdraw amount is zero")
+    void withdraw_shouldThrowInvalidMoneyExceptionWhenAmountIsZero() {
+        Wallet wallet = new Wallet(
+                new WalletId(UUID.randomUUID()),
+                new CustomerId(UUID.randomUUID()),
+                new Money(new BigDecimal("10.00"))
+        );
+
+        InvalidMoneyException exception = assertThrows(InvalidMoneyException.class, () -> wallet.withdraw(new Money(BigDecimal.ZERO)));
+
+        assertEquals("withdraw amount must be > 0", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName(value = "Should allow withdrawing full balance and set balance to zero")
+    void withdraw_shouldAllowWithdrawingFullBalance() {
+        Wallet wallet = new Wallet(
+                new WalletId(UUID.randomUUID()),
+                new CustomerId(UUID.randomUUID()),
+                new Money(new BigDecimal("10.00"))
+        );
+
+        wallet.withdraw(new Money(new BigDecimal("10.00")));
+
+        assertEquals(new BigDecimal("0.00"), wallet.getBalance().amount());
     }
 
     @Test

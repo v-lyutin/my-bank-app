@@ -34,19 +34,20 @@ public final class Wallet {
     }
 
     public void deposit(Money amount) {
-        Objects.requireNonNull(amount, "amount must not be null");
-        if (amount.isNegative()) {
-            throw new InvalidMoneyException("deposit amount must be > 0");
-        }
+        requireNonZeroAmount(amount, "deposit amount must be > 0");
         this.balance = this.balance.plus(amount);
     }
 
     public void withdraw(Money amount) {
-        Objects.requireNonNull(amount, "amount must not be null");
-        if (amount.isNegative()) {
-            throw new InvalidMoneyException("withdraw amount must be > 0");
-        }
+        requireNonZeroAmount(amount, "withdraw amount must be > 0");
         this.balance = this.balance.minus(amount);
+    }
+
+    private static void requireNonZeroAmount(Money amount, String message) {
+        Objects.requireNonNull(amount, "amount must not be null");
+        if (amount.isZero()) {
+            throw new InvalidMoneyException(message);
+        }
     }
 
 }

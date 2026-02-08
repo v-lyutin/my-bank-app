@@ -75,30 +75,6 @@ class MoneyTest {
     }
 
     @Test
-    @DisplayName(value = "Should create zero money using zero factory method")
-    void zero_shouldCreateZeroMoneyUsingZeroFactoryMethod() {
-        Money money = Money.zero();
-
-        assertEquals(new BigDecimal("0.00"), money.amount());
-    }
-
-    @Test
-    @DisplayName(value = "Should return false for isNegative when amount is zero")
-    void isNegative_shouldReturnFalseWhenAmountIsZero() {
-        Money money = new Money(BigDecimal.ZERO);
-
-        assertFalse(money.isNegative());
-    }
-
-    @Test
-    @DisplayName(value = "Should return false for isNegative when amount is positive")
-    void isNegative_shouldReturnFalseWhenAmountIsPositive() {
-        Money money = new Money(new BigDecimal("1.00"));
-
-        assertFalse(money.isNegative());
-    }
-
-    @Test
     @DisplayName(value = "Should add two money amounts correctly")
     void plus_shouldAddTwoMoneyAmountsCorrectly() {
         Money firstMoney = new Money(new BigDecimal("10.25"));
@@ -121,6 +97,39 @@ class MoneyTest {
         assertNotSame(secondMoney, result);
     }
 
+
+    @Test
+    @DisplayName(value = "Should throw NullPointerException when plus argument is null")
+    void plus_shouldThrowNpeWhenOtherMoneyIsNull() {
+        Money money = new Money(new BigDecimal("1.00"));
+
+        NullPointerException exception = assertThrows(NullPointerException.class, () -> money.plus(null));
+
+        assertEquals("otherMoney must not be null", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName(value = "Should preserve scale after plus operationName")
+    void plus_shouldPreserveScaleAfterOperation() {
+        Money firstMoney = new Money(new BigDecimal("1"));
+        Money secondMoney = new Money(new BigDecimal("2"));
+
+        Money result = firstMoney.plus(secondMoney);
+
+        assertEquals(2, result.amount().scale());
+        assertEquals(new BigDecimal("3.00"), result.amount());
+    }
+
+    @Test
+    @DisplayName(value = "Should throw NullPointerException when minus argument is null")
+    void minus_shouldThrowNpeWhenOtherMoneyIsNull() {
+        Money money = new Money(new BigDecimal("1.00"));
+
+        NullPointerException exception = assertThrows(NullPointerException.class, () -> money.minus(null));
+
+        assertEquals("otherMoney must not be null", exception.getMessage());
+    }
+
     @Test
     @DisplayName(value = "Should subtract two money amounts correctly when result is non negative")
     void minus_shouldSubtractTwoMoneyAmountsCorrectlyWhenResultIsNonNegative() {
@@ -138,22 +147,7 @@ class MoneyTest {
         Money firstMoney = new Money(new BigDecimal("5.00"));
         Money secondMoney = new Money(new BigDecimal("10.00"));
 
-        assertThrows(
-                InsufficientFundsException.class,
-                () -> firstMoney.minus(secondMoney)
-        );
-    }
-
-    @Test
-    @DisplayName(value = "Should preserve scale after plus operationName")
-    void plus_shouldPreserveScaleAfterOperation() {
-        Money firstMoney = new Money(new BigDecimal("1"));
-        Money secondMoney = new Money(new BigDecimal("2"));
-
-        Money result = firstMoney.plus(secondMoney);
-
-        assertEquals(2, result.amount().scale());
-        assertEquals(new BigDecimal("3.00"), result.amount());
+        assertThrows(InsufficientFundsException.class, () -> firstMoney.minus(secondMoney));
     }
 
     @Test
@@ -166,6 +160,29 @@ class MoneyTest {
 
         assertEquals(2, result.amount().scale());
         assertEquals(new BigDecimal("3.00"), result.amount());
+    }
+
+    @Test
+    @DisplayName(value = "Should allow subtraction resulting in zero")
+    void minus_shouldAllowSubtractionResultingInZero() {
+        Money first = new Money(new BigDecimal("10.00"));
+        Money second = new Money(new BigDecimal("10.00"));
+
+        Money result = first.minus(second);
+
+        assertEquals(new BigDecimal("0.00"), result.amount());
+    }
+
+    @Test
+    @DisplayName(value = "Should return true for zero amount")
+    void isZero_shouldReturnTrueForZero() {
+        assertTrue(new Money(new BigDecimal("0")).isZero());
+    }
+
+    @Test
+    @DisplayName(value = "Should return false for positive amount")
+    void isZero_shouldReturnFalseForPositive() {
+        assertFalse(new Money(new BigDecimal("0.01")).isZero());
     }
 
 }
