@@ -5,6 +5,7 @@ import com.amit.mybankapp.transfer.infrastructure.audit.model.type.TransferStatu
 import com.amit.mybankapp.transfer.infrastructure.audit.repository.jdbc.JdbcTransferRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 import org.springframework.dao.DuplicateKeyException;
 
@@ -21,7 +22,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 @Import(value = JdbcTransferRepository.class)
 class JdbcTransferRepositoryTest extends AbstractRepositoryIT {
 
-    @org.springframework.beans.factory.annotation.Autowired
+    @Autowired
     private JdbcTransferRepository jdbcTransferRepository;
 
     @Test

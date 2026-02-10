@@ -1,6 +1,6 @@
 -- liquibase formatted sql
 
--- changeset v-lyutin:transfer-002-create-transfer-operations
+-- changeset v-lyutin:transfer-create-transfer-operations
 CREATE TABLE IF NOT EXISTS ${schemaName}.transfer_operations (
   transfer_id           UUID PRIMARY KEY,
   sender_customer_id    UUID NOT NULL,

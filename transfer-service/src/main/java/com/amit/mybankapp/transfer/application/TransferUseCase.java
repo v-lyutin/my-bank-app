@@ -4,12 +4,9 @@ import com.amit.mybankapp.apierrors.server.exception.ApiException;
 import com.amit.mybankapp.commons.client.AccountsClient;
 import com.amit.mybankapp.commons.client.dto.transfer.CreateTransferRequest;
 import com.amit.mybankapp.commons.client.dto.transfer.CreateTransferResponse;
-import com.amit.mybankapp.transfer.TransferTransactionHandler;
 import com.amit.mybankapp.transfer.application.exception.TransferExecutionException;
-import com.amit.mybankapp.transfer.infrastructure.audit.TransferAudit;
 import com.amit.mybankapp.transfer.infrastructure.provider.CurrentUserProvider;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;

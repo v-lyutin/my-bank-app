@@ -8,3 +8,6 @@ databaseChangeLog:
   - include:
       file: v1/changelog-create-transfer_operations-table.sql
       relativeToChangelogFile: true
+  - include:
+      file: v1/changelog-create-transfer_outbox-table.sql
+      relativeToChangelogFile: true
