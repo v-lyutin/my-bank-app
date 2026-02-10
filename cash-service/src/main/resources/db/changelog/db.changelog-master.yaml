@@ -1,0 +1,10 @@
+databaseChangeLog:
+  - property:
+      name: schemaName
+      value: cash
+  - include:
+      file: v1/changelog-create-schema.sql
+      relativeToChangelogFile: true
+  - include:
+      file: v1/changelog-create-wallet_operations-table.sql
+      relativeToChangelogFile: true

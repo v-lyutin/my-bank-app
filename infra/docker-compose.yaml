@@ -1,0 +1,41 @@
+services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.4.7
+    container_name: bank-keycloak
+    command: start-dev --import-realm
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    ports:
+      - "18080:8080"
+    volumes:
+      - ./keycloak/realm-export.json:/opt/keycloak/data/import/realm-export.json
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8080/health/ready" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  accounts-db:
+    image: ${POSTGRESQL_IMAGE:-postgres:17.6-alpine3.22}
+    ports:
+      - "${ACCOUNTS_DB_PORT:-5434}:5432"
+    environment:
+      POSTGRES_USER: ${ACCOUNTS_DB_USER:-admin}
+      POSTGRES_PASSWORD: ${ACCOUNTS_DB_PASSWORD:-password}
+      POSTGRES_DB: ${ACCOUNTS_DB_NAME:-accounts}
+  cash-db:
+    image: ${POSTGRESQL_IMAGE:-postgres:17.6-alpine3.22}
+    ports:
+      - "${CASH_DB_PORT:-5435}:5432"
+    environment:
+      POSTGRES_USER: ${CASH_DB_USER:-admin}
+      POSTGRES_PASSWORD: ${CASH_DB_PASSWORD:-password}
+      POSTGRES_DB: ${CASH_DB_NAME:-cash}
+  transfer-db:
+    image: ${POSTGRESQL_IMAGE:-postgres:17.6-alpine3.22}
+    ports:
+      - "${TRANSFER_DB_PORT:-5436}:5432"
+    environment:
+      POSTGRES_USER: ${TRANSFER_DB_USER:-admin}
+      POSTGRES_PASSWORD: ${TRANSFER_DB_PASSWORD:-password}
+      POSTGRES_DB: ${TRANSFER_DB_NAME:-transfer}

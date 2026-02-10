@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: front-controller
+  config:
+    import: optional:configserver:http://localhost:8888
+  security:
+    oauth2:
+      client:
+        registration:
+          keycloak:
+            client-id: front-ui
+            authorization-grant-type: authorization_code
+            scope: openid,profile,email
+server:
+  port: ${SERVER_PORT:8084}

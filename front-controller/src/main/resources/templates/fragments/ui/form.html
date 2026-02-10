@@ -1,0 +1,16 @@
+<div xmlns:th="http://www.thymeleaf.org"
+     th:fragment="field(label, path, type, placeholder, readonly)">
+    <div>
+        <label class="form-label text-secondary small mb-1" th:text="${label}"></label>
+
+        <input class="form-control"
+               th:type="${type} ?: 'text'"
+               th:field="*{__${path}__}"
+               th:placeholder="${placeholder}"
+               th:readonly="${readonly}"/>
+
+        <div class="text-danger small mt-1"
+             th:if="${#fields.hasErrors(path)}"
+             th:errors="*{__${path}__}"></div>
+    </div>
+</div>

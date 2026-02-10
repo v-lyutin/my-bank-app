@@ -1,0 +1,42 @@
+<div xmlns:th="http://www.thymeleaf.org"
+     th:fragment="card(transferForm, recipients, transferSuccess, transferError)"
+     class="card h-100">
+    <div class="card-body p-4">
+        <h2 class="h5 card-title mb-3">
+            <i class="bi bi-send me-2 text-primary"></i>Transfer
+        </h2>
+
+        <div th:replace="~{fragments/ui/alerts :: success(msg=${transferSuccess})}"></div>
+        <div th:replace="~{fragments/ui/alerts :: error(msg=${transferError})}"></div>
+
+        <form th:action="@{/transfers}" th:object="${transferForm}" method="post" class="vstack gap-3">
+
+            <div>
+                <label class="form-label text-secondary small mb-1">Recipient</label>
+                <select class="form-select" th:field="*{recipientCustomerId}">
+                    <option value="" disabled selected>Select recipient</option>
+                    <option th:each="r : ${recipients}"
+                            th:value="${r.recipientId}"
+                            th:text="${r.firstName + ' ' + r.lastName + ' (' + r.login + ')'}">
+                    </option>
+                </select>
+
+                <div class="text-danger small mt-1"
+                     th:if="${#fields.hasErrors('recipientCustomerId')}"
+                     th:errors="*{recipientCustomerId}"></div>
+            </div>
+
+            <div th:replace="~{fragments/ui/form :: field(
+                label='Amount',
+                path='amount',
+                type='text',
+                placeholder='0.00',
+                readonly=false
+            )}"></div>
+
+            <button class="btn btn-primary rounded-3 py-2" type="submit">
+                <i class="bi bi-lightning-charge me-1"></i>Transfer
+            </button>
+        </form>
+    </div>
+</div>

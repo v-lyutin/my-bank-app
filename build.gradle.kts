@@ -1,29 +1,38 @@
+import io.spring.gradle.dependencymanagement.dsl.DependencyManagementExtension
+import org.gradle.api.plugins.JavaPluginExtension
+
 plugins {
-	java
-	id("org.springframework.boot") version "3.5.7" apply false
-	id("io.spring.dependency-management") version "1.1.7" apply false
+    id("org.springframework.boot") version "3.5.7" apply false
+    id("io.spring.dependency-management") version "1.1.7" apply false
 }
 
-group = "com.amit.mybankapp"
-version = "0.0.1"
+allprojects {
+    group = "com.amit.mybankapp"
+    version = "0.0.1"
+
+    repositories {
+        mavenCentral()
+    }
+}
 
 subprojects {
+    apply(plugin = "java-library")
+    apply(plugin = "io.spring.dependency-management")
 
-	apply(plugin = "java")
-	apply(plugin = "io.spring.dependency-management")
+    extensions.configure<DependencyManagementExtension> {
+        imports {
+            mavenBom("org.springframework.boot:spring-boot-dependencies:3.5.7")
+            mavenBom("org.springframework.cloud:spring-cloud-dependencies:2025.0.0")
+        }
+    }
 
-	repositories {
-		mavenCentral()
-	}
+    extensions.configure<JavaPluginExtension> {
+        toolchain {
+            languageVersion.set(JavaLanguageVersion.of(21))
+        }
+    }
 
-	java {
-		toolchain {
-			languageVersion = JavaLanguageVersion.of(21)
-		}
-	}
-
-	tasks.withType<Test> {
-		useJUnitPlatform()
-	}
-
+    tasks.withType<Test> {
+        useJUnitPlatform()
+    }
 }
