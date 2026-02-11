@@ -11,7 +11,6 @@ import org.springframework.security.oauth2.client.*;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 
 import java.net.URI;
-import java.util.Objects;
 
 @Configuration
 public class ServiceToServiceRestClientSecurityConfiguration {
@@ -37,7 +36,7 @@ public class ServiceToServiceRestClientSecurityConfiguration {
 
     @Bean
     public RestClientCustomizer serviceBearerTokenRestClientCustomizer(OAuth2AuthorizedClientManager authorizedClientManager, MyBankClientsProperties myBankClientsProperties) {
-        String accountsServiceId = myBankClientsProperties.accountsService().serviceId();
+        String accountsServiceId = myBankClientsProperties.accountsService().baseUrl();
 
         return restClientBuilder -> restClientBuilder.requestInterceptor((request, body, execution) -> {
 

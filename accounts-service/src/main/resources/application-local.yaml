@@ -1,0 +1,21 @@
+server:
+  port: ${SERVER_PORT:8081}
+spring:
+  config:
+    activate:
+      on-profile: local
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:18080/realms/my-bank
+      client:
+        provider:
+          keycloak:
+            issuer-uri: http://localhost:18080/realms/my-bank
+  datasource:
+    url: jdbc:postgresql://localhost:${ACCOUNTS_DB_PORT:5434}/${ACCOUNTS_DB_NAME:accounts}
+    username: ${ACCOUNTS_DB_USER:admin}
+    password: ${ACCOUNTS_DB_PASSWORD:password}
+  liquibase:
+    enabled: true
