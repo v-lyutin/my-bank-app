@@ -31,7 +31,7 @@ public class MyBankClientsAutoConfiguration {
 
     @Bean
     @ConditionalOnProperty(prefix = "mybank.clients.accounts-service", name = "service-id")
-    public AccountsClient customerClient(@Qualifier(value = "loadBalancedRestClientBuilder") RestClient.Builder myBankLoadBalancedRestClientBuilder,
+    public AccountsClient accountsClient(@Qualifier(value = "loadBalancedRestClientBuilder") RestClient.Builder myBankLoadBalancedRestClientBuilder,
                                          MyBankClientsProperties properties) {
         RestClient restClient = myBankLoadBalancedRestClientBuilder
                 .baseUrl(HTTP_SCHEMA + properties.accountsService().serviceId())
