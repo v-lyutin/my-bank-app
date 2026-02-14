@@ -1,0 +1,28 @@
+fullnameOverride: "front-controller"
+
+image:
+  repository: front-controller
+  tag: "0.0.1"
+  pullPolicy: IfNotPresent
+
+replicaCount: 1
+
+service:
+  type: NodePort
+  port: 8080
+  nodePort: 30080
+
+probes:
+  readiness:
+    initialDelaySeconds: 10
+    periodSeconds: 5
+  liveness:
+    initialDelaySeconds: 20
+    periodSeconds: 10
+
+config:
+  apiGatewayUrl: "http://api-gateway:8080"
+
+# comes from umbrella bank chart
+global:
+  keycloakIssuerUri: ""

@@ -1,0 +1,30 @@
+dependencies:
+- name: accounts-db
+  repository: file://../accounts-db
+  version: 0.1.0
+- name: cash-db
+  repository: file://../cash-db
+  version: 0.1.0
+- name: transfer-db
+  repository: file://../transfer-db
+  version: 0.1.0
+- name: api-gateway
+  repository: file://../api-gateway
+  version: 0.1.0
+- name: accounts-service
+  repository: file://../accounts-service
+  version: 0.1.0
+- name: cash-service
+  repository: file://../cash-service
+  version: 0.1.0
+- name: transfer-service
+  repository: file://../transfer-service
+  version: 0.1.0
+- name: notifications-service
+  repository: file://../notifications-service
+  version: 0.1.0
+- name: front-controller
+  repository: file://../front-controller
+  version: 0.1.0
+digest: sha256:6c16dcbeb2781a56c970301eb1b6cd93e9d360021a4592c058d7c704e5f19c86
+generated: "2026-02-14T11:22:36.751772+01:00"

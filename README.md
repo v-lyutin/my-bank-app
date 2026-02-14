@@ -115,3 +115,15 @@ http://localhost:30080
 ```
 
 Login using the user created in Keycloak.
+
+## K8S (with Helm)
+
+```bash
+kubectl create namespace dev
+helm dependency build charts/bank
+
+helm install bank charts/bank -n dev \
+  --set global.keycloakIssuerUri=http://<IP>:18080/realms/my-bank \
+  --set-string cash-service.secrets.keycloakClientSecret=<SECRET> \
+  --set-string transfer-service.secrets.keycloakClientSecret=<SECRET>
+```

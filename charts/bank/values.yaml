@@ -1,0 +1,10 @@
+global:
+  keycloakIssuerUri: ""
+
+cash-service:
+  secrets:
+    keycloakClientSecret: ""
+
+transfer-service:
+  secrets:
+    keycloakClientSecret: ""

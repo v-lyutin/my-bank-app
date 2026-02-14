@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "accounts-service.fullname" . }}-config
+data:
+  SPRING_DATASOURCE_URL: {{ .Values.datasource.url | quote }}
+  LIQUIBASE_ENABLED: {{ .Values.liquibase.enabled | quote }}
+  KEYCLOAK_ISSUER_URI: {{ .Values.global.keycloakIssuerUri | quote }}
