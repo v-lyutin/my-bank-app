@@ -1,0 +1,77 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: transfer-service-config
+  namespace: dev
+data:
+  KEYCLOAK_ISSUER_URI: "http://${HOST_IP}:18080/realms/my-bank"
+  SPRING_DATASOURCE_URL: "jdbc:postgresql://transfer-db:5432/transfer"
+  LIQUIBASE_ENABLED: "true"
+  ACCOUNTS_SERVICE_URL: "http://accounts-service:8080"
+  NOTIFICATIONS_SERVICE_URL: "http://notifications-service:8080"
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: transfer-service-secret
+  namespace: dev
+type: Opaque
+stringData:
+  SPRING_DATASOURCE_USERNAME: "admin"
+  SPRING_DATASOURCE_PASSWORD: "password"
+  KEYCLOAK_TRANSFER_SERVICE_SECRET: efQ4S5QtSkz4eStyMKLRUCJHOWnpd8sx
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: transfer-service
+  namespace: dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: transfer-service
+  template:
+    metadata:
+      labels:
+        app: transfer-service
+    spec:
+      containers:
+        - name: app
+          image: transfer-service:0.0.1
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+              name: http
+          envFrom:
+            - configMapRef:
+                name: transfer-service-config
+            - secretRef:
+                name: transfer-service-secret
+          readinessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 5
+          livenessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 20
+            periodSeconds: 10
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: transfer-service
+  namespace: dev
+spec:
+  type: ClusterIP
+  selector:
+    app: transfer-service
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080

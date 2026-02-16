@@ -1,0 +1,32 @@
+server:
+  port: ${SERVER_PORT:8082}
+spring:
+  config:
+    activate:
+      on-profile: local
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${KEYCLOAK_ISSUER_URI:http://localhost:18080/realms/my-bank}
+      client:
+        provider:
+          keycloak:
+            issuer-uri: ${KEYCLOAK_ISSUER_URI:http://localhost:18080/realms/my-bank}
+        registration:
+          cash-service:
+            client-id: cash-service
+            client-secret: ${KEYCLOAK_CASH_SERVICE_SECRET:dev-secret}
+            authorization-grant-type: client_credentials
+  datasource:
+    url: ${CASH_DB_URL:jdbc:postgresql://localhost:${CASH_DB_PORT:5435}/${CASH_DB_NAME:cash}}
+    username: ${CASH_DB_USER:admin}
+    password: ${CASH_DB_PASSWORD:password}
+  liquibase:
+    enabled: true
+mybank:
+  clients:
+    accounts-service:
+      base-url: ${ACCOUNTS_SERVICE_URL:http://localhost:8081}
+    notifications-service:
+      base-url: ${NOTIFICATIONS_SERVICE_URL:http://localhost:8085}

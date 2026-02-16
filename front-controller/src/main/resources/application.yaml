@@ -1,15 +1,25 @@
 spring:
   application:
     name: front-controller
-  config:
-    import: optional:configserver:http://localhost:8888
   security:
     oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${KEYCLOAK_ISSUER_URI}
       client:
+        provider:
+          keycloak:
+            issuer-uri: ${KEYCLOAK_ISSUER_URI}
         registration:
           keycloak:
             client-id: front-ui
             authorization-grant-type: authorization_code
             scope: openid,profile,email
-server:
-  port: ${SERVER_PORT:8084}
+mybank:
+  clients:
+    accounts-service:
+      base-url: ${API_GATEWAY_URL}
+    transfer-service:
+      base-url: ${API_GATEWAY_URL}
+    wallet-service:
+      base-url: ${API_GATEWAY_URL}

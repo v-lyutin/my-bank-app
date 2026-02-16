@@ -1,0 +1,43 @@
+apiVersion: v2
+name: bank
+description: Umbrella chart for My Bank microservices
+type: application
+version: 0.1.0
+
+dependencies:
+  - name: accounts-db
+    version: 0.1.0
+    repository: "file://../accounts-db"
+
+  - name: cash-db
+    version: 0.1.0
+    repository: "file://../cash-db"
+
+  - name: transfer-db
+    version: 0.1.0
+    repository: "file://../transfer-db"
+
+  - name: api-gateway
+    version: 0.1.0
+    repository: "file://../api-gateway"
+
+  - name: accounts-service
+    version: 0.1.0
+    repository: "file://../accounts-service"
+
+  - name: cash-service
+    version: 0.1.0
+    repository: "file://../cash-service"
+
+  - name: transfer-service
+    version: 0.1.0
+    repository: "file://../transfer-service"
+
+  - name: notifications-service
+    version: 0.1.0
+    repository: "file://../notifications-service"
+
+  - name: front-controller
+    version: 0.1.0
+    repository: "file://../front-controller"
+

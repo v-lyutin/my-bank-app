@@ -11,7 +11,6 @@ import org.springframework.security.oauth2.client.*;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 
 import java.net.URI;
-import java.util.Objects;
 
 @Configuration
 public class ServiceToServiceRestClientSecurityConfiguration {
@@ -37,12 +36,15 @@ public class ServiceToServiceRestClientSecurityConfiguration {
 
     @Bean
     public RestClientCustomizer serviceBearerTokenRestClientCustomizer(OAuth2AuthorizedClientManager authorizedClientManager, MyBankClientsProperties myBankClientsProperties) {
-        String accountsServiceId = myBankClientsProperties.accountsService().serviceId();
+        String accountsBaseUrl = myBankClientsProperties.accountsService().baseUrl();
+        URI accountsUri = URI.create(accountsBaseUrl);
 
         return restClientBuilder -> restClientBuilder.requestInterceptor((request, body, execution) -> {
 
             URI requestUri = request.getURI();
-            boolean isAccountsCall = accountsServiceId.equalsIgnoreCase(requestUri.getHost());
+            boolean isAccountsCall = accountsUri.getHost() != null
+                    && accountsUri.getHost().equalsIgnoreCase(requestUri.getHost())
+                    && (accountsUri.getPort() == -1 || accountsUri.getPort() == requestUri.getPort());
 
             if (!isAccountsCall) {
                 return execution.execute(request, body);

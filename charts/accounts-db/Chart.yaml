@@ -1,0 +1,6 @@
+apiVersion: v2
+name: accounts-db
+description: Postgres database for accounts-service
+type: application
+version: 0.1.0
+appVersion: "17.6"

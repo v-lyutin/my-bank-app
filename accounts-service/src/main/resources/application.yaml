@@ -1,10 +1,15 @@
 spring:
   application:
     name: accounts-service
-  config:
-    import: optional:configserver:http://localhost:8888
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${KEYCLOAK_ISSUER_URI}
+      client:
+        provider:
+          keycloak:
+            issuer-uri: ${KEYCLOAK_ISSUER_URI}
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yaml
-    enabled: true
-server:
-  port: ${SERVER_PORT:8081}
+    enabled: ${LIQUIBASE_ENABLED:true}

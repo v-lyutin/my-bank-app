@@ -1,0 +1,36 @@
+fullnameOverride: "accounts-db"
+
+image:
+  repository: postgres
+  tag: "17.6-alpine3.22"
+  pullPolicy: IfNotPresent
+
+postgres:
+  database: accounts
+  username: admin
+  password: password
+
+service:
+  port: 5432
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+persistence:
+  enabled: true
+  accessModes:
+    - ReadWriteOnce
+  size: 512Mi
+
+probes:
+  readiness:
+    initialDelaySeconds: 10
+    periodSeconds: 5
+  liveness:
+    initialDelaySeconds: 20
+    periodSeconds: 10

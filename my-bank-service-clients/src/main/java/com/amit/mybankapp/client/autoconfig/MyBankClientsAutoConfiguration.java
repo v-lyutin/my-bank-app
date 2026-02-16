@@ -13,7 +13,6 @@ import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.web.client.RestClientBuilderConfigurer;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestClient;
 
@@ -21,50 +20,47 @@ import org.springframework.web.client.RestClient;
 @EnableConfigurationProperties(value = MyBankClientsProperties.class)
 public class MyBankClientsAutoConfiguration {
 
-    private static final String HTTP_SCHEMA = "http://";
-
-    @Bean
-    @LoadBalanced
-    public RestClient.Builder loadBalancedRestClientBuilder(RestClientBuilderConfigurer configurer) {
+    @Bean(name = "myBankRestClientBuilder")
+    public RestClient.Builder myBankRestClientBuilder(RestClientBuilderConfigurer configurer) {
         return configurer.configure(RestClient.builder());
     }
 
     @Bean
-    @ConditionalOnProperty(prefix = "mybank.clients.accounts-service", name = "service-id")
-    public AccountsClient customerClient(@Qualifier(value = "loadBalancedRestClientBuilder") RestClient.Builder myBankLoadBalancedRestClientBuilder,
+    @ConditionalOnProperty(prefix = "mybank.clients.accounts-service", name = "base-url")
+    public AccountsClient accountsClient(@Qualifier(value = "myBankRestClientBuilder") RestClient.Builder myBankLoadBalancedRestClientBuilder,
                                          MyBankClientsProperties properties) {
         RestClient restClient = myBankLoadBalancedRestClientBuilder
-                .baseUrl(HTTP_SCHEMA + properties.accountsService().serviceId())
+                .baseUrl(properties.accountsService().baseUrl())
                 .build();
         return new RestClientAccountsClient(restClient);
     }
 
     @Bean
-    @ConditionalOnProperty(prefix = "mybank.clients.transfer-service", name = "service-id")
-    public TransferClient transferClient(@Qualifier(value = "loadBalancedRestClientBuilder") RestClient.Builder myBankLoadBalancedRestClientBuilder,
+    @ConditionalOnProperty(prefix = "mybank.clients.transfer-service", name = "base-url")
+    public TransferClient transferClient(@Qualifier(value = "myBankRestClientBuilder") RestClient.Builder myBankLoadBalancedRestClientBuilder,
                                          MyBankClientsProperties properties) {
         RestClient restClient = myBankLoadBalancedRestClientBuilder
-                .baseUrl(HTTP_SCHEMA + properties.transferService().serviceId())
+                .baseUrl(properties.transferService().baseUrl())
                 .build();
         return new RestClientTransferClient(restClient);
     }
 
     @Bean
-    @ConditionalOnProperty(prefix = "mybank.clients.wallet-service", name = "service-id")
-    public WalletClient walletClient(@Qualifier(value = "loadBalancedRestClientBuilder") RestClient.Builder myBankLoadBalancedRestClientBuilder,
+    @ConditionalOnProperty(prefix = "mybank.clients.wallet-service", name = "base-url")
+    public WalletClient walletClient(@Qualifier(value = "myBankRestClientBuilder") RestClient.Builder myBankLoadBalancedRestClientBuilder,
                                      MyBankClientsProperties properties) {
         RestClient restClient = myBankLoadBalancedRestClientBuilder
-                .baseUrl(HTTP_SCHEMA + properties.walletService().serviceId())
+                .baseUrl(properties.walletService().baseUrl())
                 .build();
         return new RestClientWalletClient(restClient);
     }
 
     @Bean
-    @ConditionalOnProperty(prefix = "mybank.clients.notifications-service", name = "service-id")
-    public NotificationsClient notificationsClient(@Qualifier(value = "loadBalancedRestClientBuilder") RestClient.Builder myBankLoadBalancedRestClientBuilder,
+    @ConditionalOnProperty(prefix = "mybank.clients.notifications-service", name = "base-url")
+    public NotificationsClient notificationsClient(@Qualifier(value = "myBankRestClientBuilder") RestClient.Builder myBankLoadBalancedRestClientBuilder,
                                                    MyBankClientsProperties properties) {
         RestClient restClient = myBankLoadBalancedRestClientBuilder
-                .baseUrl(HTTP_SCHEMA + properties.notificationsService().serviceId())
+                .baseUrl(properties.notificationsService().baseUrl())
                 .build();
         return new RestClientNotificationsClient(restClient);
     }

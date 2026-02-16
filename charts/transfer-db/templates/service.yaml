@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "transfer-db.fullname" . }}
+spec:
+  selector:
+    app.kubernetes.io/name: {{ include "transfer-db.fullname" . }}
+  ports:
+    - name: postgres
+      port: {{ .Values.service.port }}
+      targetPort: 5432
