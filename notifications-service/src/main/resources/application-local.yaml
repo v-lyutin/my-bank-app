@@ -4,3 +4,27 @@ spring:
   config:
     activate:
       on-profile: local
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    consumer:
+      group-id: my-bank-notification-consumer
+      enable-auto-commit: false
+      auto-offset-reset: earliest
+      properties:
+        spring.json.trusted.packages: "com.amit.mybank.notifications.messaging.event"
+        spring.json.use.type.headers: false
+      listener:
+        ack-mode: record
+mybank:
+  kafka:
+    topics:
+      walletOperationCompleted: my-bank.wallet-operations.completed.v1
+      transferCreated: my-bank.transfers.created.v1
+      walletOperationCompletedDlq: my-bank.wallet-operations.completed.v1.dlq
+      transferCreatedDlq: my-bank.transfers.created.v1.dlq
+    error-handling:
+      max-retries: 3
+      initial-interval-ms: 1000
+      multiplier: 2.0
+      max-interval-ms: 10000
+      dlq-suffix: ".dlq"
