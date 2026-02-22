@@ -1,11 +1,9 @@
 package com.amit.mybankapp.client.autoconfig;
 
 import com.amit.mybankapp.client.restclient.RestClientAccountsClient;
-import com.amit.mybankapp.client.restclient.RestClientNotificationsClient;
 import com.amit.mybankapp.client.restclient.RestClientTransferClient;
 import com.amit.mybankapp.client.restclient.RestClientWalletClient;
 import com.amit.mybankapp.commons.client.AccountsClient;
-import com.amit.mybankapp.commons.client.NotificationsClient;
 import com.amit.mybankapp.commons.client.TransferClient;
 import com.amit.mybankapp.commons.client.WalletClient;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -53,16 +51,6 @@ public class MyBankClientsAutoConfiguration {
                 .baseUrl(properties.walletService().baseUrl())
                 .build();
         return new RestClientWalletClient(restClient);
-    }
-
-    @Bean
-    @ConditionalOnProperty(prefix = "mybank.clients.notifications-service", name = "base-url")
-    public NotificationsClient notificationsClient(@Qualifier(value = "myBankRestClientBuilder") RestClient.Builder myBankLoadBalancedRestClientBuilder,
-                                                   MyBankClientsProperties properties) {
-        RestClient restClient = myBankLoadBalancedRestClientBuilder
-                .baseUrl(properties.notificationsService().baseUrl())
-                .build();
-        return new RestClientNotificationsClient(restClient);
     }
 
 }

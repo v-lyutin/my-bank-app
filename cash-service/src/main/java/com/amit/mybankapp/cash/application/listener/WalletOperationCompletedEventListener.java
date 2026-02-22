@@ -1,6 +1,5 @@
 package com.amit.mybankapp.cash.application.listener;
 
-import com.amit.mybankapp.commons.client.NotificationsClient;
 import com.amit.mybankapp.commons.model.event.WalletOperationCompletedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
