@@ -1,7 +1,6 @@
 package com.amit.mybankapp.client.restclient;
 
 import com.amit.mybankapp.commons.client.NotificationsClient;
-import com.amit.mybankapp.commons.model.event.TransferCreatedEvent;
 import com.amit.mybankapp.commons.model.event.WalletOperationCompletedEvent;
 import org.springframework.web.client.RestClient;
 

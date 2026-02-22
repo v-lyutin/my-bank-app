@@ -1,8 +1,8 @@
 package com.amit.mybankapp.transfer.infrastructure.outbox.processor;
 
-import com.amit.mybankapp.commons.client.NotificationsClient;
-import com.amit.mybankapp.commons.model.event.TransferCreatedEvent;
 import com.amit.mybankapp.transfer.infrastructure.outbox.model.TransferOutboxRecord;
+import com.amit.mybankapp.transfer.infrastructure.outbox.producer.NotificationsProducer;
+import com.amit.mybankapp.transfer.infrastructure.outbox.producer.event.TransferCreatedEvent;
 import com.amit.mybankapp.transfer.infrastructure.outbox.repository.TransferOutboxRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
@@ -26,18 +26,18 @@ public class TransferOutboxProcessor {
 
     private final TransferOutboxAcquirer transferOutboxAcquirer;
 
-    private final NotificationsClient notificationsClient;
+    private final NotificationsProducer notificationsProducer;
 
     private final ObjectMapper objectMapper;
 
     @Autowired
     public TransferOutboxProcessor(TransferOutboxRepository transferOutboxRepository,
                                    TransferOutboxAcquirer transferOutboxAcquirer,
-                                   NotificationsClient notificationsClient,
+                                   NotificationsProducer notificationsProducer,
                                    ObjectMapper objectMapper) {
         this.transferOutboxRepository = transferOutboxRepository;
         this.transferOutboxAcquirer = transferOutboxAcquirer;
-        this.notificationsClient = notificationsClient;
+        this.notificationsProducer = notificationsProducer;
         this.objectMapper = objectMapper;
     }
 
@@ -53,7 +53,7 @@ public class TransferOutboxProcessor {
         try {
             if (transferOutboxRecord.eventType() == TransferOutboxRecord.TransferEventType.TRANSFER_CREATED) {
                 TransferCreatedEvent transferCreatedEvent = this.objectMapper.readValue(transferOutboxRecord.payload(), TransferCreatedEvent.class);
-                this.notificationsClient.sendTransferCreatedEvent(transferCreatedEvent);
+                this.notificationsProducer.sendTransferCreated(transferCreatedEvent, outboxId);
             } else {
                 LOGGER.warn("Unknown outbox event type: outboxId={}, eventType={}", outboxId, transferOutboxRecord.eventType());
                 this.transferOutboxRepository.markAsFailed(outboxId);
