@@ -1,6 +1,6 @@
-package com.amit.mybankapp.cash.application.listener;
+package com.amit.mybankapp.cash.application.messaging;
 
-import com.amit.mybankapp.commons.model.event.WalletOperationCompletedEvent;
+import com.amit.mybankapp.cash.application.messaging.event.WalletOperationCompletedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,20 +14,24 @@ public class WalletOperationCompletedEventListener {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(WalletOperationCompletedEventListener.class);
 
-    private final NotificationsClient notificationsClient;
+    private final NotificationsProducer notificationsProducer;
 
     @Autowired
-    public WalletOperationCompletedEventListener(NotificationsClient notificationsClient) {
-        this.notificationsClient = notificationsClient;
+    public WalletOperationCompletedEventListener(NotificationsProducer notificationsProducer) {
+        this.notificationsProducer = notificationsProducer;
     }
 
     @Async
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
-    public void on(WalletOperationCompletedEvent walletOperationCompletedEvent) {
+    public void onWalletOperationCompletedEvent(WalletOperationCompletedEvent event) {
         try {
-            this.notificationsClient.sendWalletOperationCompletedEvent(walletOperationCompletedEvent);
+            this.notificationsProducer.send(event);
         } catch (RuntimeException exception) {
-            LOGGER.warn("Failed to send wallet operation notification. operationId={}", walletOperationCompletedEvent.operationId(), exception);
+            LOGGER.warn(
+                    "Failed to publish wallet-operation-completed.v1 to Kafka. operationId={}",
+                    event.operationId(),
+                    exception
+            );
         }
     }
 
