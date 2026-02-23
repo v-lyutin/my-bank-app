@@ -38,4 +38,4 @@ mybank:
       base-url: ${ACCOUNTS_SERVICE_URL}
   kafka:
     topics:
-      transferCreated: my-bank.transfers.created.v1
+      transferCreated: ${KAFKA_TOPIC_TRANSFER_CREATED}

@@ -43,4 +43,4 @@ mybank:
       base-url: ${ACCOUNTS_SERVICE_URL:http://localhost:8081}
   kafka:
     topics:
-      walletOperationCompleted: my-bank.wallet-operations.completed.v1
+      walletOperationCompleted: ${KAFKA_TOPIC_WALLET_OPERATION_COMPLETED:my-bank.wallet-operations.completed.v1}

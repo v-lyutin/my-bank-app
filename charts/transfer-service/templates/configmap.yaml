@@ -8,3 +8,5 @@ data:
   ACCOUNTS_SERVICE_URL: {{ .Values.clients.accountsServiceUrl | quote }}
   NOTIFICATIONS_SERVICE_URL: {{ .Values.clients.notificationsServiceUrl | quote }}
   KEYCLOAK_ISSUER_URI: {{ .Values.global.keycloakIssuerUri | quote }}
+  KAFKA_BOOTSTRAP_SERVERS: {{ .Values.kafka.bootstrapServers | quote }}
+  KAFKA_TOPIC_TRANSFER_CREATED: {{ .Values.kafka.topics.transferCreated | quote }}

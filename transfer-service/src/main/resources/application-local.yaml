@@ -43,4 +43,4 @@ mybank:
       base-url: ${ACCOUNTS_SERVICE_URL:http://localhost:8081}
   kafka:
     topics:
-      transferCreated: my-bank.transfers.created.v1
+      transferCreated: ${KAFKA_TOPIC_TRANSFER_CREATED:my-bank.transfers.created.v1}

@@ -4,27 +4,32 @@ spring:
   config:
     activate:
       on-profile: local
+  application:
+    name: notifications-service
   kafka:
     bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
     consumer:
-      group-id: my-bank-notification-consumer
+      group-id: ${KAFKA_CONSUMER_GROUP_ID:my-bank-notification-consumer}
       enable-auto-commit: false
-      auto-offset-reset: earliest
+      auto-offset-reset: ${KAFKA_AUTO_OFFSET_RESET:earliest}
       properties:
         spring.json.trusted.packages: "com.amit.mybank.notifications.messaging.event"
-        spring.json.use.type.headers: false
+        spring.json.use.type.headers: true
+      spring.json.type.mapping: >
+        wallet-operation-completed.v1:com.amit.mybank.notifications.messaging.event.WalletOperationCompletedEvent,
+        transfer-created.v1:com.amit.mybank.notifications.messaging.event.TransferCreatedEvent
       listener:
         ack-mode: record
 mybank:
   kafka:
     topics:
-      walletOperationCompleted: my-bank.wallet-operations.completed.v1
-      transferCreated: my-bank.transfers.created.v1
-      walletOperationCompletedDlq: my-bank.wallet-operations.completed.v1.dlq
-      transferCreatedDlq: my-bank.transfers.created.v1.dlq
+      walletOperationCompleted: ${KAFKA_TOPIC_WALLET_OPERATION_COMPLETED:my-bank.wallet-operations.completed.v1}
+      transferCreated: ${KAFKA_TOPIC_TRANSFER_CREATED:my-bank.transfers.created.v1}
+      walletOperationCompletedDlq: ${KAFKA_TOPIC_WALLET_OPERATION_COMPLETED_DLQ:my-bank.wallet-operations.completed.v1.dlq}
+      transferCreatedDlq: ${KAFKA_TOPIC_TRANSFER_CREATED_DLQ:my-bank.transfers.created.v1.dlq}
     error-handling:
-      max-retries: 3
-      initial-interval-ms: 1000
-      multiplier: 2.0
-      max-interval-ms: 10000
-      dlq-suffix: ".dlq"
+      max-retries: ${KAFKA_ERROR_MAX_RETRIES:3}
+      initial-interval-ms: ${KAFKA_ERROR_INITIAL_INTERVAL_MS:1000}
+      multiplier: ${KAFKA_ERROR_MULTIPLIER:2.0}
+      max-interval-ms: ${KAFKA_ERROR_MAX_INTERVAL_MS:10000}
+      dlq-suffix: ${KAFKA_ERROR_DLQ_SUFFIX:.dlq}

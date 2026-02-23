@@ -4,9 +4,9 @@ spring:
   kafka:
     bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS}
     consumer:
-      group-id: my-bank-notification-consumer
+      group-id: ${KAFKA_CONSUMER_GROUP_ID}
       enable-auto-commit: false
-      auto-offset-reset: earliest
+      auto-offset-reset: ${KAFKA_AUTO_OFFSET_RESET}
       properties:
         spring.json.trusted.packages: "com.amit.mybank.notifications.messaging.event"
         spring.json.use.type.headers: true
@@ -18,13 +18,13 @@ spring:
 mybank:
   kafka:
     topics:
-      walletOperationCompleted: my-bank.wallet-operations.completed.v1
-      transferCreated: my-bank.transfers.created.v1
-      walletOperationCompletedDlq: my-bank.wallet-operations.completed.v1.dlq
-      transferCreatedDlq: my-bank.transfers.created.v1.dlq
+      walletOperationCompleted: ${KAFKA_TOPIC_WALLET_OPERATION_COMPLETED}
+      transferCreated: ${KAFKA_TOPIC_TRANSFER_CREATED}
+      walletOperationCompletedDlq: ${KAFKA_TOPIC_WALLET_OPERATION_COMPLETED_DLQ}
+      transferCreatedDlq: ${KAFKA_TOPIC_TRANSFER_CREATED_DLQ}
     error-handling:
-      max-retries: 3
-      initial-interval-ms: 1000
-      multiplier: 2.0
-      max-interval-ms: 10000
-      dlq-suffix: ".dlq"
+      max-retries: ${KAFKA_ERROR_MAX_RETRIES}
+      initial-interval-ms: ${KAFKA_ERROR_INITIAL_INTERVAL_MS}
+      multiplier: ${KAFKA_ERROR_MULTIPLIER}
+      max-interval-ms: ${KAFKA_ERROR_MAX_INTERVAL_MS}
+      dlq-suffix: ${KAFKA_ERROR_DLQ_SUFFIX}
