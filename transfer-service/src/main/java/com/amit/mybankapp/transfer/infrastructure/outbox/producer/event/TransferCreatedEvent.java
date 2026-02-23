@@ -1,4 +1,4 @@
-package com.amit.mybankapp.commons.model.event;
+package com.amit.mybankapp.transfer.infrastructure.outbox.producer.event;
 
 import com.amit.mybankapp.commons.client.dto.transfer.CreateTransferResponse;
 

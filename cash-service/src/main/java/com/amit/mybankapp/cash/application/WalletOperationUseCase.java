@@ -2,12 +2,12 @@ package com.amit.mybankapp.cash.application;
 
 import com.amit.mybankapp.apierrors.server.exception.ApiException;
 import com.amit.mybankapp.cash.application.exception.WalletOperationExecutionException;
+import com.amit.mybankapp.cash.application.messaging.event.WalletOperationCompletedEvent;
 import com.amit.mybankapp.cash.application.model.WalletOperationCommand;
 import com.amit.mybankapp.cash.application.processor.WalletCommandProcessor;
 import com.amit.mybankapp.cash.application.processor.WalletCommandProcessorRegistry;
 import com.amit.mybankapp.cash.infrastructure.provider.CurrentUserProvider;
 import com.amit.mybankapp.commons.client.dto.wallet.WalletOperationResponse;
-import com.amit.mybankapp.commons.model.event.WalletOperationCompletedEvent;
 import com.amit.mybankapp.commons.model.type.WalletOperationType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +22,8 @@ import java.util.UUID;
 @Service
 public class WalletOperationUseCase {
 
-    private static final Logger log = LoggerFactory.getLogger(WalletOperationUseCase.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(WalletOperationUseCase.class);
+
     private final WalletCommandProcessorRegistry walletCommandProcessorRegistry;
 
     private final WalletOperationAudit walletOperationAudit;
@@ -57,7 +58,7 @@ public class WalletOperationUseCase {
         UUID operationId = UUID.randomUUID();
         BigDecimal amount = command.amount();
 
-        log.info(
+        LOGGER.info(
                 "Wallet operation started: operationId={}, type={}, customerId={}, amount={}",
                 operationId,
                 command.walletOperationType(),
@@ -76,7 +77,7 @@ public class WalletOperationUseCase {
                     amount
             );
 
-            log.info(
+            LOGGER.info(
                     "Wallet operation succeeded: operationId={}, walletId={}, customerId={}, amount={}",
                     operationId,
                     walletOperationResponse.walletId(),
@@ -90,7 +91,7 @@ public class WalletOperationUseCase {
 
             return enrichedWalletOperationResponse;
         } catch (ApiException exception) {
-            log.error(
+            LOGGER.error(
                     "Wallet operation failed with ApiException: operationId={}, type={}, status={}, message={}",
                     operationId,
                     command.walletOperationType(),
@@ -106,7 +107,7 @@ public class WalletOperationUseCase {
             throw new WalletOperationExecutionException(operationId, exception);
 
         } catch (RuntimeException exception) {
-            log.error(
+            LOGGER.error(
                     "Wallet operation failed with unexpected exception: operationId={}, type={}, customerId={}",
                     operationId,
                     command.walletOperationType(),

@@ -17,3 +17,23 @@ probes:
   liveness:
     initialDelaySeconds: 20
     periodSeconds: 10
+
+kafka:
+  bootstrapServers: "kafka-broker:9092"
+
+  consumer:
+    groupId: "my-bank-notification-consumer"
+    autoOffsetReset: "earliest"
+
+  topics:
+    walletOperationCompleted: "my-bank.wallet-operations.completed.v1"
+    transferCreated: "my-bank.transfers.created.v1"
+    walletOperationCompletedDlq: "my-bank.wallet-operations.completed.v1.dlq"
+    transferCreatedDlq: "my-bank.transfers.created.v1.dlq"
+
+  errorHandling:
+    maxRetries: 3
+    initialIntervalMs: 1000
+    multiplier: 2.0
+    maxIntervalMs: 10000
+    dlqSuffix: ".dlq"

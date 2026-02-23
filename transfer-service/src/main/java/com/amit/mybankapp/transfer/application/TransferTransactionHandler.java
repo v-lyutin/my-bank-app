@@ -2,9 +2,9 @@ package com.amit.mybankapp.transfer.application;
 
 import com.amit.mybankapp.commons.client.dto.transfer.CreateTransferRequest;
 import com.amit.mybankapp.commons.client.dto.transfer.CreateTransferResponse;
-import com.amit.mybankapp.commons.model.event.TransferCreatedEvent;
 import com.amit.mybankapp.transfer.infrastructure.audit.TransferAudit;
 import com.amit.mybankapp.transfer.infrastructure.outbox.model.TransferOutboxRecord;
+import com.amit.mybankapp.transfer.infrastructure.outbox.producer.event.TransferCreatedEvent;
 import com.amit.mybankapp.transfer.infrastructure.outbox.repository.TransferOutboxRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
