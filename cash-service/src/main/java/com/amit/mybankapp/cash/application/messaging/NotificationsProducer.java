@@ -1,6 +1,7 @@
 package com.amit.mybankapp.cash.application.messaging;
 
 import com.amit.mybankapp.cash.application.messaging.event.WalletOperationCompletedEvent;
+import com.amit.mybankapp.cash.application.messaging.exception.NotificationPublishException;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
 import org.slf4j.Logger;
@@ -8,11 +9,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.CompletableFuture;
 
 @Component
 public class NotificationsProducer {
@@ -36,32 +36,34 @@ public class NotificationsProducer {
         this.topic = topic;
     }
 
-    public void send(WalletOperationCompletedEvent event) {
+    public CompletableFuture<Void> send(WalletOperationCompletedEvent event) {
         String operationId = event.operationId().toString();
-        ProducerRecord<String, Object> producerRecord = this.buildRecord(event, operationId);
+        ProducerRecord<String, Object> record = buildRecord(event, operationId);
 
-        try {
-            SendResult<String, Object> sendResult = this.kafkaTemplate.send(producerRecord).get();
-            RecordMetadata recordMetadata = sendResult.getRecordMetadata();
+        return this.kafkaTemplate.send(record)
+                .thenAccept(result -> {
+                    RecordMetadata recordMetadata = result.getRecordMetadata();
+                    LOGGER.info("Published {}: topic={}, partition={}, offset={}, operationId={}",
+                            TYPE_ID_WALLET_OPERATION_COMPLETED_V1,
+                            recordMetadata.topic(), recordMetadata.partition(), recordMetadata.offset(),
+                            operationId);
+                })
+                .whenComplete((result, exception) -> {
+                    if (exception != null) {
+                        Throwable cause = exception.getCause() != null ? exception.getCause() : exception;
 
-            LOGGER.info("Published {}: topic={}, partition={}, offset={}, operationId={}",
-                    TYPE_ID_WALLET_OPERATION_COMPLETED_V1,
-                    recordMetadata.topic(), recordMetadata.partition(), recordMetadata.offset(),
-                    operationId
-            );
-        } catch (InterruptedException exception) {
-            Thread.currentThread().interrupt();
-            throw new NotificationPublishException(
-                    "Interrupted while publishing " + TYPE_ID_WALLET_OPERATION_COMPLETED_V1 + " (operationId=" + operationId + ")",
-                    exception
-            );
-        } catch (ExecutionException executionException) {
-            Throwable cause = executionException.getCause() != null ? executionException.getCause() : executionException;
-            throw new NotificationPublishException(
-                    "Failed publishing " + TYPE_ID_WALLET_OPERATION_COMPLETED_V1 + " (topic=" + this.topic + ", operationId=" + operationId + ")",
-                    cause
-            );
-        }
+                        LOGGER.warn("Failed publishing {} (topic={}, operationId={})",
+                                TYPE_ID_WALLET_OPERATION_COMPLETED_V1,
+                                topic,
+                                operationId,
+                                cause);
+
+                        throw new NotificationPublishException(
+                                "Failed publishing " + TYPE_ID_WALLET_OPERATION_COMPLETED_V1 + " (topic=" + topic + ", operationId=" + operationId + ")",
+                                cause
+                        );
+                    }
+                });
     }
 
     private ProducerRecord<String, Object> buildRecord(WalletOperationCompletedEvent event, String operationId) {
@@ -71,12 +73,6 @@ public class NotificationsProducer {
         producerRecord.headers().add(HEADER_OPERATION_ID, operationId.getBytes(StandardCharsets.UTF_8));
 
         return producerRecord;
-    }
-
-    public static class NotificationPublishException extends RuntimeException {
-        public NotificationPublishException(String message, Throwable cause) {
-            super(message, cause);
-        }
     }
 
 }
