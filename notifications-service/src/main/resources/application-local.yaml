@@ -15,9 +15,9 @@ spring:
       properties:
         spring.json.trusted.packages: "com.amit.mybank.notifications.messaging.event"
         spring.json.use.type.headers: true
-      spring.json.type.mapping: >
-        wallet-operation-completed.v1:com.amit.mybank.notifications.messaging.event.WalletOperationCompletedEvent,
-        transfer-created.v1:com.amit.mybank.notifications.messaging.event.TransferCreatedEvent
+        spring.json.type.mapping: >
+          wallet-operation-completed.v1:com.amit.mybank.notifications.messaging.event.WalletOperationCompletedEvent,
+          transfer-created.v1:com.amit.mybank.notifications.messaging.event.TransferCreatedEvent
       listener:
         ack-mode: record
 mybank:
