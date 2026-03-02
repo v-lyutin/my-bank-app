@@ -1,4 +1,4 @@
-package com.amit.mybankapp.commons.model.event;
+package com.amit.mybankapp.cash.application.messaging.event;
 
 import com.amit.mybankapp.commons.client.dto.wallet.WalletOperationResponse;
 

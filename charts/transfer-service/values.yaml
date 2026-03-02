@@ -39,3 +39,8 @@ global:
     host: ""
     port: 18080
     realm: "my-bank"
+
+kafka:
+  bootstrapServers: "kafka-broker:9092"
+  topics:
+    transferCreated: "my-bank.transfers.created.v1"

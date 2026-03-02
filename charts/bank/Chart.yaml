@@ -17,6 +17,10 @@ dependencies:
     version: 0.1.0
     repository: "file://../transfer-db"
 
+  - name: kafka
+    version: 18.0.1
+    repository: "https://helm-charts.itboon.top/kafka"
+
   - name: api-gateway
     version: 0.1.0
     repository: "file://../api-gateway"

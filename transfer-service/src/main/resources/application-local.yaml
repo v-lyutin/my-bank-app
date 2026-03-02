@@ -18,6 +18,19 @@ spring:
             client-id: transfer-service
             client-secret: ${KEYCLOAK_TRANSFER_SERVICE_SECRET:dev-secret}
             authorization-grant-type: client_credentials
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS}
+    producer:
+      acks: all
+      retries: 10
+      properties:
+        enable.idempotence: true
+        max.in.flight.requests.per.connection: 5
+        delivery.timeout.ms: 120000
+        request.timeout.ms: 30000
+        spring.json.add.type.headers: false
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
   datasource:
     url: ${TRANSFER_DB_URL:jdbc:postgresql://localhost:${TRANSFER_DB_PORT:5436}/${TRANSFER_DB_NAME:transfer}}
     username: ${TRANSFER_DB_USER:admin}
@@ -28,5 +41,6 @@ mybank:
   clients:
     accounts-service:
       base-url: ${ACCOUNTS_SERVICE_URL:http://localhost:8081}
-    notifications-service:
-      base-url: ${NOTIFICATIONS_SERVICE_URL:http://localhost:8085}
+  kafka:
+    topics:
+      transferCreated: ${KAFKA_TOPIC_TRANSFER_CREATED:my-bank.transfers.created.v1}

@@ -1,3 +1,30 @@
 spring:
   application:
     name: notifications-service
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS}
+    consumer:
+      group-id: ${KAFKA_CONSUMER_GROUP_ID}
+      enable-auto-commit: false
+      auto-offset-reset: ${KAFKA_AUTO_OFFSET_RESET}
+      properties:
+        spring.json.trusted.packages: "com.amit.mybank.notifications.messaging.event"
+        spring.json.use.type.headers: true
+        spring.json.type.mapping: >
+          wallet-operation-completed.v1:com.amit.mybank.notifications.messaging.event.WalletOperationCompletedEvent,
+          transfer-created.v1:com.amit.mybank.notifications.messaging.event.TransferCreatedEvent
+      listener:
+        ack-mode: record
+mybank:
+  kafka:
+    topics:
+      walletOperationCompleted: ${KAFKA_TOPIC_WALLET_OPERATION_COMPLETED}
+      transferCreated: ${KAFKA_TOPIC_TRANSFER_CREATED}
+      walletOperationCompletedDlq: ${KAFKA_TOPIC_WALLET_OPERATION_COMPLETED_DLQ}
+      transferCreatedDlq: ${KAFKA_TOPIC_TRANSFER_CREATED_DLQ}
+    error-handling:
+      max-retries: ${KAFKA_ERROR_MAX_RETRIES}
+      initial-interval-ms: ${KAFKA_ERROR_INITIAL_INTERVAL_MS}
+      multiplier: ${KAFKA_ERROR_MULTIPLIER}
+      max-interval-ms: ${KAFKA_ERROR_MAX_INTERVAL_MS}
+      dlq-suffix: ${KAFKA_ERROR_DLQ_SUFFIX}

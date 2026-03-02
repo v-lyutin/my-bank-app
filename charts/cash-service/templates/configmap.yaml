@@ -6,6 +6,7 @@ data:
   LIQUIBASE_ENABLED: {{ default true .Values.liquibase.enabled | quote }}
   SPRING_DATASOURCE_URL: {{ .Values.datasource.url | quote }}
   ACCOUNTS_SERVICE_URL: {{ .Values.clients.accountsServiceUrl | quote }}
-  NOTIFICATIONS_SERVICE_URL: {{ .Values.clients.notificationsServiceUrl | quote }}
   KEYCLOAK_ISSUER_URI: {{ .Values.global.keycloakIssuerUri | quote }}
+  KAFKA_BOOTSTRAP_SERVERS: {{ .Values.kafka.bootstrapServers | quote }}
+  KAFKA_TOPIC_WALLET_OPERATION_COMPLETED: {{ .Values.kafka.topics.walletOperationCompleted | quote }}
 

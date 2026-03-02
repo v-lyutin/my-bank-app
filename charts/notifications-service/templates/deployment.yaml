@@ -19,6 +19,9 @@ spec:
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}
+          envFrom:
+            - configMapRef:
+                name: {{ include "notifications-service.fullname" . }}-config
           readinessProbe:
             tcpSocket:
               port: {{ .Values.service.port }}

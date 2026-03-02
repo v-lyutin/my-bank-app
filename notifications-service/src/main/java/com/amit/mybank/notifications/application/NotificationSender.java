@@ -1,7 +1,7 @@
 package com.amit.mybank.notifications.application;
 
-import com.amit.mybankapp.commons.model.event.TransferCreatedEvent;
-import com.amit.mybankapp.commons.model.event.WalletOperationCompletedEvent;
+import com.amit.mybank.notifications.messaging.event.TransferCreatedEvent;
+import com.amit.mybank.notifications.messaging.event.WalletOperationCompletedEvent;
 
 public interface NotificationSender {
 

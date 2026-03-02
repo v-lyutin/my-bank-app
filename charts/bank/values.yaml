@@ -8,3 +8,13 @@ cash-service:
 transfer-service:
   secrets:
     keycloakClientSecret: ""
+
+kafka:
+  fullnameOverride: kafka
+  broker:
+    replicaCount: 1
+    config:
+      auto.create.topics.enable: "true"
+    service:
+      type: ClusterIP
+      port: 9092
