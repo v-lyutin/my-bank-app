@@ -1,0 +1,12 @@
+image:
+  repository: grafana/grafana
+  tag: "10.4.0"
+  pullPolicy: IfNotPresent
+
+service:
+  type: NodePort
+  port: 3000
+  nodePort: 30000
+
+persistence:
+  enabled: false

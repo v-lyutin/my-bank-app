@@ -17,6 +17,9 @@ dependencies:
 - name: prometheus
   repository: file://../prometheus
   version: 0.1.0
+- name: grafana
+  repository: file://../grafana
+  version: 1.0.0
 - name: api-gateway
   repository: file://../api-gateway
   version: 0.1.0
@@ -35,5 +38,5 @@ dependencies:
 - name: front-controller
   repository: file://../front-controller
   version: 0.1.0
-digest: sha256:a6a7dff0629199e7c48987c9132cbbabe32f23012dd6e29ac2cf9338edfa5412
-generated: "2026-03-03T20:19:17.740751+01:00"
+digest: sha256:b9f31842d5d65707738bb600d1163d15b325a0f06d666b3fc570a4baf9e71774
+generated: "2026-03-03T22:09:33.195639+01:00"

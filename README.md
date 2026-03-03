@@ -104,3 +104,4 @@ Login using the user created in Keycloak.
 
 - Zipkin: http://localhost:30411/zipkin/
 - Prometheus: http://localhost:30090/
+- Grafana: http://localhost:30000/
