@@ -11,6 +11,9 @@ dependencies:
 - name: kafka
   repository: https://helm-charts.itboon.top/kafka
   version: 18.0.1
+- name: zipkin
+  repository: file://../zipkin
+  version: 0.1.0
 - name: api-gateway
   repository: file://../api-gateway
   version: 0.1.0
@@ -29,5 +32,5 @@ dependencies:
 - name: front-controller
   repository: file://../front-controller
   version: 0.1.0
-digest: sha256:53d05cb9a46fcf6d9265eba0ed42889ae9ec8272478b4058434a98b8658c39d4
-generated: "2026-02-23T21:19:21.377336+01:00"
+digest: sha256:9f40aa39e06ac5b201c6b6ff972ea74d0f1a1c12e9abcc72ea0b5f1ab10b9067
+generated: "2026-03-02T20:40:14.523595+01:00"

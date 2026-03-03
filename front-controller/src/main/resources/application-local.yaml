@@ -14,6 +14,18 @@ spring:
           provider:
             keycloak:
               issuer-uri: ${KEYCLOAK_ISSUER_URI:http://localhost:18080/realms/my-bank}
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  tracing:
+    enabled: true
+    sampling:
+      probability: 1.0
+  zipkin:
+    tracing:
+      endpoint: "http://zipkin-service:9411/api/v2/spans"
 mybank:
   clients:
     accounts-service:

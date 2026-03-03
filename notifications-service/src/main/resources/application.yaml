@@ -15,6 +15,14 @@ spring:
           transfer-created.v1:com.amit.mybank.notifications.messaging.event.TransferCreatedEvent
       listener:
         ack-mode: record
+management:
+  tracing:
+    enabled: true
+    sampling:
+      probability: ${TRACE_PROBABILITY}
+  zipkin:
+    tracing:
+      endpoint: ${ZIPKIN_ENDPOINT}
 mybank:
   kafka:
     topics:

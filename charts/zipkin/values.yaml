@@ -1,0 +1,13 @@
+image:
+  repository: openzipkin/zipkin
+  tag: "3.4.3"
+  pullPolicy: IfNotPresent
+
+service:
+  type: NodePort
+  port: 9411
+  nodePort: 30411
+
+zipkin:
+  storageType: mem
+  javaOpts: "-Xms512m -Xmx512m"

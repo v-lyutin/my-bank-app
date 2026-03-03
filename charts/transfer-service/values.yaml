@@ -44,3 +44,6 @@ kafka:
   bootstrapServers: "kafka-broker:9092"
   topics:
     transferCreated: "my-bank.transfers.created.v1"
+
+tracing:
+  probability: "1.0"

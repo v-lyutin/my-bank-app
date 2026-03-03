@@ -7,9 +7,11 @@ import com.amit.mybankapp.accounts.domain.customer.vo.CustomerId;
 import com.amit.mybankapp.accounts.domain.wallet.Wallet;
 import com.amit.mybankapp.accounts.domain.wallet.vo.Money;
 import com.amit.mybankapp.apierrors.server.exception.base.ResourceNotFoundException;
+import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.actuate.autoconfigure.tracing.zipkin.ZipkinProperties;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,9 +28,19 @@ public class TransferUseCase {
 
     private final WalletRepository walletRepository;
 
+    private final ZipkinProperties zipkinProperties;
+
     @Autowired
-    public TransferUseCase(WalletRepository walletRepository) {
+    public TransferUseCase(WalletRepository walletRepository, ZipkinProperties zipkinProperties) {
         this.walletRepository = walletRepository;
+        this.zipkinProperties = zipkinProperties;
+    }
+
+    @PostConstruct
+    public void debugZipkin() {
+        LOGGER.info("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        LOGGER.info("DEBUG: Zipkin Endpoint from Properties: [{}]", zipkinProperties.getEndpoint());
+        LOGGER.info("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
     }
 
     @Transactional

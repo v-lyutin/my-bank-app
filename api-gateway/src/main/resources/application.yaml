@@ -29,3 +29,15 @@ spring:
               uri: ${ACCOUNTS_SERVICE_URL}
               predicates:
                 - Path=/customers/me,/customers/me/profile,/customers/me/recipient-candidates,/wallets/me
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  tracing:
+    enabled: true
+    sampling:
+      probability: ${TRACE_PROBABILITY}
+  zipkin:
+    tracing:
+      endpoint: ${ZIPKIN_ENDPOINT}

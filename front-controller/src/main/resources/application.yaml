@@ -15,6 +15,18 @@ spring:
             client-id: front-ui
             authorization-grant-type: authorization_code
             scope: openid,profile,email
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  tracing:
+    enabled: true
+    sampling:
+      probability: ${TRACE_PROBABILITY}
+  zipkin:
+    tracing:
+      endpoint: ${ZIPKIN_ENDPOINT}
 mybank:
   clients:
     accounts-service:

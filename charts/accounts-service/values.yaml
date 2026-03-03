@@ -25,3 +25,6 @@ datasource:
   url: "jdbc:postgresql://accounts-db:5432/accounts"
   username: admin
   password: password
+
+tracing:
+  probability: "1.0"

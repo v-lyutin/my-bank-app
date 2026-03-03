@@ -6,3 +6,5 @@ data:
   SPRING_DATASOURCE_URL: {{ .Values.datasource.url | quote }}
   LIQUIBASE_ENABLED: {{ .Values.liquibase.enabled | quote }}
   KEYCLOAK_ISSUER_URI: {{ .Values.global.keycloakIssuerUri | quote }}
+  TRACE_PROBABILITY: {{ .Values.tracing.probability | quote }}
+  ZIPKIN_ENDPOINT: "http://{{ .Release.Name }}-zipkin.{{ .Release.Namespace }}.svc.cluster.local:9411/api/v2/spans"

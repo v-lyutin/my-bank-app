@@ -33,7 +33,7 @@ public class SecurityConfiguration {
         return httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/actuator/health/**").permitAll()
+                        .requestMatchers("/actuator/**").permitAll()
                         .anyRequest().hasRole("ACCOUNTS")
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2

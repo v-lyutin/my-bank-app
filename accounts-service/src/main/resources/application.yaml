@@ -13,3 +13,15 @@ spring:
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yaml
     enabled: ${LIQUIBASE_ENABLED:true}
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  tracing:
+    enabled: true
+    sampling:
+      probability: ${TRACE_PROBABILITY}
+  zipkin:
+    tracing:
+      endpoint: ${ZIPKIN_ENDPOINT}

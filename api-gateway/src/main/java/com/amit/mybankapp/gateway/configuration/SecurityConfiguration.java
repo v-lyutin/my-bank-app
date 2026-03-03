@@ -31,7 +31,7 @@ public class SecurityConfiguration {
         return serverHttpSecurity
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .authorizeExchange(exchangeSpec -> exchangeSpec
-                        .pathMatchers("/actuator/health/**").permitAll()
+                        .pathMatchers("/actuator/**").permitAll()
 
                         // cash-service endpoints (UI -> gateway -> cash)
                         .pathMatchers("/customers/me/deposits", "/customers/me/withdrawals").hasRole("CASH")

@@ -21,6 +21,10 @@ dependencies:
     version: 18.0.1
     repository: "https://helm-charts.itboon.top/kafka"
 
+  - name: zipkin
+    version: 0.1.0
+    repository: "file://../zipkin"
+
   - name: api-gateway
     version: 0.1.0
     repository: "file://../api-gateway"
