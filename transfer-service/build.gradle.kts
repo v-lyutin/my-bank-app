@@ -28,4 +28,6 @@ dependencies {
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.testcontainers:postgresql")
+
+    implementation("io.micrometer:micrometer-registry-prometheus")
 }

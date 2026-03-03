@@ -41,3 +41,9 @@ management:
   zipkin:
     tracing:
       endpoint: ${ZIPKIN_ENDPOINT}
+  metrics:
+    distribution:
+      percentiles-precision:
+        http.server.requests: 2
+      percentiles:
+        http.server.requests: 0.5, 0.9, 0.95, 0.99
