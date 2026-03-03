@@ -1,6 +1,8 @@
 package com.amit.mybankapp.transfer.infrastructure.outbox.producer;
 
 import com.amit.mybankapp.transfer.infrastructure.outbox.producer.event.TransferCreatedEvent;
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
 import org.slf4j.Logger;
@@ -32,11 +34,15 @@ public class NotificationsProducer {
 
     private final String transferCreatedTopic;
 
+    private final MeterRegistry meterRegistry;
+
     @Autowired
     public NotificationsProducer(KafkaTemplate<String, Object> kafkaTemplate,
-                                 @Value("${mybank.kafka.topics.transferCreated}") String transferCreatedTopic) {
+                                 @Value("${mybank.kafka.topics.transferCreated}") String transferCreatedTopic,
+                                 MeterRegistry meterRegistry) {
         this.kafkaTemplate = kafkaTemplate;
         this.transferCreatedTopic = transferCreatedTopic;
+        this.meterRegistry = meterRegistry;
     }
 
     public void sendTransferCreated(TransferCreatedEvent event, UUID outboxId) {
@@ -54,11 +60,13 @@ public class NotificationsProducer {
             );
         } catch (InterruptedException exception) {
             Thread.currentThread().interrupt();
+            this.recordNotificationError(event.senderCustomerId(), event.recipientCustomerId());
             throw new NotificationPublishException(
                     "Interrupted while publishing " + TYPE_ID_TRANSFER_CREATED_V1 + " (outboxId=" + outboxId + ", transferId=" + transferId + ")",
                     exception
             );
         } catch (ExecutionException executionException) {
+            this.recordNotificationError(event.senderCustomerId(), event.recipientCustomerId());
             Throwable cause = executionException.getCause() != null ? executionException.getCause() : executionException;
             throw new NotificationPublishException(
                     "Failed publishing " + TYPE_ID_TRANSFER_CREATED_V1 + " (topic=" + transferCreatedTopic + ", outboxId=" + outboxId + ", transferId=" + transferId + ")",
@@ -81,6 +89,16 @@ public class NotificationsProducer {
         public NotificationPublishException(String message, Throwable cause) {
             super(message, cause);
         }
+    }
+
+    private void recordNotificationError(UUID senderId, UUID recipientId) {
+        Counter.builder("mybank.notification.failed")
+                .description("Total number of failed notification deliveries to Kafka")
+                .tag("sender_id", senderId.toString())
+                .tag("recipient_id", recipientId.toString())
+                .tag("service", "transfer-service")
+                .register(this.meterRegistry)
+                .increment();
     }
 
 }

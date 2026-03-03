@@ -68,9 +68,9 @@ public class TransferUseCase {
 
     private void recordTransferFailed(UUID senderId, UUID recipientId) {
         Counter.builder("mybank.transfer.failed")
-                .description("Total number of failed transfer attempts")
-                .tag("sender_id", senderId.toString())
-                .tag("recipient_id", recipientId.toString())
+                .description("Number of failed money transfers between users")
+                .tag("sender_login", senderId.toString())
+                .tag("recipient_login", recipientId.toString())
                 .register(this.meterRegistry)
                 .increment();
     }

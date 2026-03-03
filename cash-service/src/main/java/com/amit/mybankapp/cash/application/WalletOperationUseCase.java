@@ -138,11 +138,16 @@ public class WalletOperationUseCase {
     }
 
     private void recordFailedMetric(WalletOperationCommand command, UUID customerId) {
-        String operationType = command.walletOperationType().name().toLowerCase();
+        if (command.walletOperationType() == WalletOperationType.WITHDRAW) {
+            Counter.builder("mybank.withdrawal.failed")
+                    .description("Total number of failed withdrawal attempts")
+                    .tag("customer_id", customerId.toString())
+                    .register(this.meterRegistry)
+                    .increment();
+        }
 
         Counter.builder("mybank.operation.failed")
-                .description("Total number of failed wallet operations")
-                .tag("type", operationType)
+                .tag("type", command.walletOperationType().name().toLowerCase())
                 .tag("customer_id", customerId.toString())
                 .register(this.meterRegistry)
                 .increment();
