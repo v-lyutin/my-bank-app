@@ -140,7 +140,7 @@ public class WalletOperationUseCase {
     private void recordFailedMetric(WalletOperationCommand command, UUID customerId) {
         String operationType = command.walletOperationType().name().toLowerCase();
 
-        Counter.builder("banking.operation.failed")
+        Counter.builder("mybank.operation.failed")
                 .description("Total number of failed wallet operations")
                 .tag("type", operationType)
                 .tag("customer_id", customerId.toString())
