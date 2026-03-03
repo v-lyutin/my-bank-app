@@ -103,3 +103,4 @@ Login using the user created in Keycloak.
 ## Additional info
 
 - Zipkin: http://localhost:30411/zipkin/
+- Prometheus: http://localhost:30090/

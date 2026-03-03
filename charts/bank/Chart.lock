@@ -14,6 +14,9 @@ dependencies:
 - name: zipkin
   repository: file://../zipkin
   version: 0.1.0
+- name: prometheus
+  repository: file://../prometheus
+  version: 0.1.0
 - name: api-gateway
   repository: file://../api-gateway
   version: 0.1.0
@@ -32,5 +35,5 @@ dependencies:
 - name: front-controller
   repository: file://../front-controller
   version: 0.1.0
-digest: sha256:9f40aa39e06ac5b201c6b6ff972ea74d0f1a1c12e9abcc72ea0b5f1ab10b9067
-generated: "2026-03-02T20:40:14.523595+01:00"
+digest: sha256:a6a7dff0629199e7c48987c9132cbbabe32f23012dd6e29ac2cf9338edfa5412
+generated: "2026-03-03T20:19:17.740751+01:00"
