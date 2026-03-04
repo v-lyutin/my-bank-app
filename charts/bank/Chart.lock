@@ -20,6 +20,12 @@ dependencies:
 - name: grafana
   repository: file://../grafana
   version: 1.0.0
+- name: elasticsearch
+  repository: file://../elasticsearch
+  version: 0.1.0
+- name: logstash
+  repository: file://../logstash
+  version: 0.1.0
 - name: api-gateway
   repository: file://../api-gateway
   version: 0.1.0
@@ -38,5 +44,5 @@ dependencies:
 - name: front-controller
   repository: file://../front-controller
   version: 0.1.0
-digest: sha256:b9f31842d5d65707738bb600d1163d15b325a0f06d666b3fc570a4baf9e71774
-generated: "2026-03-03T22:09:33.195639+01:00"
+digest: sha256:6a302cf3f21cfcade81e434ab7e52fd8d251aee3eddc5054ad88ee05cb2d3af2
+generated: "2026-03-04T18:10:00.986095+01:00"

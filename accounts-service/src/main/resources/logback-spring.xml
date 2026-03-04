@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
+
+    <springProperty scope="context" name="LOGSTASH_DESTINATION" source="logging.logstash.destination" defaultValue="logstash-service:5044"/>
+
+    <appender name="LOGSTASH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+        <destination>${LOGSTASH_DESTINATION}</destination>
+
+        <reconnectionDelay>5 second</reconnectionDelay>
+
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+            <includeContext>true</includeContext>
+            <includeMdc>true</includeMdc> <fieldNames>
+            <timestamp>timestamp</timestamp>
+            <version>v</version>
+            <message>msg</message>
+            <logger>logger</logger>
+            <thread>thread</thread>
+            <level>level</level>
+        </fieldNames>
+        </encoder>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="LOGSTASH" />
+    </root>
+
+    <logger name="com.amit.mybankapp" level="DEBUG" />
+</configuration>

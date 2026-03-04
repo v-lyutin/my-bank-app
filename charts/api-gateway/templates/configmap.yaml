@@ -9,3 +9,4 @@ data:
   ACCOUNTS_SERVICE_URL: {{ .Values.routes.accountsServiceUrl | quote }}
   TRACE_PROBABILITY: {{ .Values.tracing.probability | quote }}
   ZIPKIN_ENDPOINT: "http://{{ .Release.Name }}-zipkin.{{ .Release.Namespace }}.svc.cluster.local:9411/api/v2/spans"
+  LOGGING_LOGSTASH_DESTINATION: "{{ .Release.Name }}-logstash:5044"

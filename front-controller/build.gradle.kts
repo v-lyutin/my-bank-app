@@ -18,4 +18,6 @@ dependencies {
     implementation("io.zipkin.reporter2:zipkin-reporter-brave")
 
     implementation("io.micrometer:micrometer-registry-prometheus")
+
+    implementation("net.logstash.logback:logstash-logback-encoder:7.4")
 }

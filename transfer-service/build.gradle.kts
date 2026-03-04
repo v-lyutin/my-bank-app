@@ -30,4 +30,6 @@ dependencies {
     testImplementation("org.testcontainers:postgresql")
 
     implementation("io.micrometer:micrometer-registry-prometheus")
+
+    implementation("net.logstash.logback:logstash-logback-encoder:7.4")
 }
