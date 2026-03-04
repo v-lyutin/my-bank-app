@@ -26,6 +26,9 @@ dependencies:
 - name: logstash
   repository: file://../logstash
   version: 0.1.0
+- name: kibana
+  repository: file://../kibana
+  version: 0.1.0
 - name: api-gateway
   repository: file://../api-gateway
   version: 0.1.0
@@ -44,5 +47,5 @@ dependencies:
 - name: front-controller
   repository: file://../front-controller
   version: 0.1.0
-digest: sha256:6a302cf3f21cfcade81e434ab7e52fd8d251aee3eddc5054ad88ee05cb2d3af2
-generated: "2026-03-04T18:10:00.986095+01:00"
+digest: sha256:c2975a288f3cde387811432d93d4c5e4b6b416505067791156d9a2579ef91abd
+generated: "2026-03-04T19:53:15.639025+01:00"

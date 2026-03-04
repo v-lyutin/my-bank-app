@@ -42,6 +42,10 @@ dependencies:
     version: 0.1.0
     repository: "file://../logstash"
 
+  - name: kibana
+    version: 0.1.0
+    repository: "file://../kibana"
+
   - name: api-gateway
     version: 0.1.0
     repository: "file://../api-gateway"
