@@ -1,0 +1,90 @@
+apiVersion: 1
+groups:
+    - orgId: 1
+      name: 10s
+      folder: my-bank-cash-operation-alerts
+      interval: 10s
+      rules:
+        - uid: bff0m77mgfo5ce
+          title: 'Alert: Withdrawal System Issue'
+          condition: B
+          data:
+            - refId: Failed withdrawals
+              relativeTimeRange:
+                from: 21600
+                to: 0
+              datasourceUid: PBFA97CFB590B2093
+              model:
+                datasource:
+                    type: prometheus
+                    uid: PBFA97CFB590B2093
+                editorMode: code
+                expr: sum(mybank_withdrawal_failed_total) by (service)
+                instant: false
+                interval: ""
+                intervalMs: 15000
+                legendFormat: __auto
+                maxDataPoints: 43200
+                range: true
+                refId: Failed withdrawals
+            - refId: Failure count
+              datasourceUid: __expr__
+              model:
+                conditions:
+                    - evaluator:
+                        params: []
+                        type: gt
+                      operator:
+                        type: and
+                      query:
+                        params:
+                            - A
+                      reducer:
+                        params: []
+                        type: last
+                      type: query
+                datasource:
+                    type: __expr__
+                    uid: __expr__
+                expression: Failed withdrawals
+                intervalMs: 1000
+                maxDataPoints: 43200
+                reducer: last
+                refId: Failure count
+                type: reduce
+            - refId: B
+              datasourceUid: __expr__
+              model:
+                conditions:
+                    - evaluator:
+                        params:
+                            - 3
+                        type: gt
+                      operator:
+                        type: and
+                      query:
+                        params:
+                            - B
+                      reducer:
+                        params: []
+                        type: last
+                      type: query
+                datasource:
+                    type: __expr__
+                    uid: __expr__
+                expression: Failure count
+                intervalMs: 1000
+                maxDataPoints: 43200
+                refId: B
+                type: threshold
+          dashboardUid: dff0l0ruenkzkb
+          panelId: 2
+          noDataState: NoData
+          execErrState: Error
+          for: 5m
+          annotations:
+            __dashboardUid__: dff0l0ruenkzkb
+            __panelId__: "2"
+            summary: Detected failed withdrawal attempt in cash-service
+          labels: {}
+          isPaused: false
