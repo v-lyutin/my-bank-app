@@ -29,6 +29,11 @@ spring:
               uri: ${ACCOUNTS_SERVICE_URL}
               predicates:
                 - Path=/customers/me,/customers/me/profile,/customers/me/recipient-candidates,/wallets/me
+eureka:
+  client:
+    enabled: false
+    register-with-eureka: false
+    fetch-registry: false
 management:
   endpoints:
     web:
