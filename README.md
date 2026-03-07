@@ -99,6 +99,10 @@ http://localhost:30080
 
 Login using the user created in Keycloak.
 
+## Note on Data Persistence
+
+By default, the monitoring stack (**Zipkin**, **Prometheus**, and **ELK**) is configured to use in-memory storage for development purposes. Please be aware that all traces, metrics, and logs will be lost upon pod restart or redeployment.
+
 
 ## Additional info
 
