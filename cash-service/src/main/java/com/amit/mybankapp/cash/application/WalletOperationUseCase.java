@@ -97,7 +97,7 @@ public class WalletOperationUseCase {
 
             return enrichedWalletOperationResponse;
         } catch (ApiException exception) {
-            this.recordFailedMetric(command, currentCustomerId);
+            this.recordFailedMetric(command);
             LOGGER.error(
                     "Wallet operation failed with ApiException: operationId={}, type={}, status={}, message={}",
                     operationId,
@@ -114,7 +114,7 @@ public class WalletOperationUseCase {
             throw new WalletOperationExecutionException(operationId, exception);
 
         } catch (RuntimeException exception) {
-            this.recordFailedMetric(command, currentCustomerId);
+            this.recordFailedMetric(command);
             LOGGER.error(
                     "Wallet operation failed with unexpected exception: operationId={}, type={}, customerId={}",
                     operationId,
@@ -137,18 +137,16 @@ public class WalletOperationUseCase {
         );
     }
 
-    private void recordFailedMetric(WalletOperationCommand command, UUID customerId) {
+    private void recordFailedMetric(WalletOperationCommand command) {
         if (command.walletOperationType() == WalletOperationType.WITHDRAW) {
             Counter.builder("mybank.withdrawal.failed")
                     .description("Total number of failed withdrawal attempts")
-                    .tag("customer_id", customerId.toString())
                     .register(this.meterRegistry)
                     .increment();
         }
 
         Counter.builder("mybank.operation.failed")
                 .tag("type", command.walletOperationType().name().toLowerCase())
-                .tag("customer_id", customerId.toString())
                 .register(this.meterRegistry)
                 .increment();
     }

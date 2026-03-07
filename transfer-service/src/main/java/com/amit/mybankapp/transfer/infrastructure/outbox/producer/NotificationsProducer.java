@@ -60,13 +60,13 @@ public class NotificationsProducer {
             );
         } catch (InterruptedException exception) {
             Thread.currentThread().interrupt();
-            this.recordNotificationError(event.senderCustomerId(), event.recipientCustomerId());
+            this.recordNotificationError();
             throw new NotificationPublishException(
                     "Interrupted while publishing " + TYPE_ID_TRANSFER_CREATED_V1 + " (outboxId=" + outboxId + ", transferId=" + transferId + ")",
                     exception
             );
         } catch (ExecutionException executionException) {
-            this.recordNotificationError(event.senderCustomerId(), event.recipientCustomerId());
+            this.recordNotificationError();
             Throwable cause = executionException.getCause() != null ? executionException.getCause() : executionException;
             throw new NotificationPublishException(
                     "Failed publishing " + TYPE_ID_TRANSFER_CREATED_V1 + " (topic=" + transferCreatedTopic + ", outboxId=" + outboxId + ", transferId=" + transferId + ")",
@@ -91,11 +91,9 @@ public class NotificationsProducer {
         }
     }
 
-    private void recordNotificationError(UUID senderId, UUID recipientId) {
+    private void recordNotificationError() {
         Counter.builder("mybank.notification.failed")
                 .description("Total number of failed notification deliveries to Kafka")
-                .tag("sender_id", senderId.toString())
-                .tag("recipient_id", recipientId.toString())
                 .tag("service", "transfer-service")
                 .register(this.meterRegistry)
                 .increment();
