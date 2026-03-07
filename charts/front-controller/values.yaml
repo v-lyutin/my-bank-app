@@ -20,6 +20,9 @@ probes:
     initialDelaySeconds: 20
     periodSeconds: 10
 
+tracing:
+  probability: "1.0"
+
 config:
   apiGatewayUrl: "http://api-gateway:8080"
 

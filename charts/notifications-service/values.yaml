@@ -37,3 +37,6 @@ kafka:
     multiplier: 2.0
     maxIntervalMs: 10000
     dlqSuffix: ".dlq"
+
+tracing:
+  probability: "1.0"

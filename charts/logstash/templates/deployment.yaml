@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "logstash.fullname" . }}
+  labels:
+    app: {{ include "logstash.fullname" . }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ include "logstash.fullname" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "logstash.fullname" . }}
+    spec:
+      containers:
+        - name: logstash
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          env:
+            - name: MONITORING_ENABLED
+              value: "false"
+            - name: XPACK_MONITORING_ENABLED
+              value: "false"
+          ports:
+            - name: beats
+              containerPort: {{ .Values.service.ports.beats }}
+          volumeMounts:
+            - name: config-volume
+              mountPath: /usr/share/logstash/pipeline/
+      volumes:
+        - name: config-volume
+          configMap:
+            name: {{ include "logstash.fullname" . }}-config

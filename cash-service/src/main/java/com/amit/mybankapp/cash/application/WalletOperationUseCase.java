@@ -9,6 +9,8 @@ import com.amit.mybankapp.cash.application.processor.WalletCommandProcessorRegis
 import com.amit.mybankapp.cash.infrastructure.provider.CurrentUserProvider;
 import com.amit.mybankapp.commons.client.dto.wallet.WalletOperationResponse;
 import com.amit.mybankapp.commons.model.type.WalletOperationType;
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,15 +34,19 @@ public class WalletOperationUseCase {
 
     private final ApplicationEventPublisher applicationEventPublisher;
 
+    private final MeterRegistry meterRegistry;
+
     @Autowired
     public WalletOperationUseCase(WalletCommandProcessorRegistry walletCommandProcessorRegistry,
                                   WalletOperationAudit walletOperationAudit,
                                   CurrentUserProvider currentUserProvider,
-                                  ApplicationEventPublisher applicationEventPublisher) {
+                                  ApplicationEventPublisher applicationEventPublisher,
+                                  MeterRegistry meterRegistry) {
         this.walletCommandProcessorRegistry = walletCommandProcessorRegistry;
         this.walletOperationAudit = walletOperationAudit;
         this.currentUserProvider = currentUserProvider;
         this.applicationEventPublisher = applicationEventPublisher;
+        this.meterRegistry = meterRegistry;
     }
 
     @Transactional
@@ -91,6 +97,7 @@ public class WalletOperationUseCase {
 
             return enrichedWalletOperationResponse;
         } catch (ApiException exception) {
+            this.recordFailedMetric(command);
             LOGGER.error(
                     "Wallet operation failed with ApiException: operationId={}, type={}, status={}, message={}",
                     operationId,
@@ -107,6 +114,7 @@ public class WalletOperationUseCase {
             throw new WalletOperationExecutionException(operationId, exception);
 
         } catch (RuntimeException exception) {
+            this.recordFailedMetric(command);
             LOGGER.error(
                     "Wallet operation failed with unexpected exception: operationId={}, type={}, customerId={}",
                     operationId,
@@ -127,6 +135,20 @@ public class WalletOperationUseCase {
                 walletOperationResponse.customerId(),
                 walletOperationResponse.amount()
         );
+    }
+
+    private void recordFailedMetric(WalletOperationCommand command) {
+        if (command.walletOperationType() == WalletOperationType.WITHDRAW) {
+            Counter.builder("mybank.withdrawal.failed")
+                    .description("Total number of failed withdrawal attempts")
+                    .register(this.meterRegistry)
+                    .increment();
+        }
+
+        Counter.builder("mybank.operation.failed")
+                .tag("type", command.walletOperationType().name().toLowerCase())
+                .register(this.meterRegistry)
+                .increment();
     }
 
 }

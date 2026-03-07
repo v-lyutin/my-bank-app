@@ -32,6 +32,9 @@ clients:
 secrets:
   keycloakClientSecret: ""  # set via --set-string
 
+tracing:
+  probability: "1.0"
+
 # for linting / standalone install
 global:
   keycloak:

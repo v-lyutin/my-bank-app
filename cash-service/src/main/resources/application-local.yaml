@@ -20,6 +20,8 @@ spring:
             authorization-grant-type: client_credentials
   kafka:
     bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS}
+    template:
+      observation-enabled: true
     producer:
       acks: all
       retries: 10
@@ -37,6 +39,20 @@ spring:
     password: ${CASH_DB_PASSWORD:password}
   liquibase:
     enabled: true
+management:
+  tracing:
+    enabled: true
+    sampling:
+      probability: 1.0
+  zipkin:
+    tracing:
+      endpoint: "http://zipkin-service:9411/api/v2/spans"
+  metrics:
+    distribution:
+      percentiles-precision:
+        http.server.requests: 2
+      percentiles:
+        http.server.requests: 0.5, 0.9, 0.95, 0.99
 mybank:
   clients:
     accounts-service:

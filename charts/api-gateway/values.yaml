@@ -23,6 +23,9 @@ routes:
   transferServiceUrl: "http://transfer-service:8080"
   accountsServiceUrl: "http://accounts-service:8080"
 
+tracing:
+  probability: "1.0"
+
 # comes from umbrella bank chart
 global:
   keycloakIssuerUri: ""
