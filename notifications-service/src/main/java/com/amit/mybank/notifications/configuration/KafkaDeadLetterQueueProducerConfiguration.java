@@ -25,7 +25,9 @@ public class KafkaDeadLetterQueueProducerConfiguration {
 
     @Bean
     public KafkaTemplate<byte[], byte[]> deadLetterQueueKafkaTemplate(ProducerFactory<byte[], byte[]> dlqProducerFactory) {
-        return new KafkaTemplate<>(dlqProducerFactory);
+        KafkaTemplate<byte[], byte[]> template = new KafkaTemplate<>(dlqProducerFactory);
+        template.setObservationEnabled(true);
+        return template;
     }
 
 }

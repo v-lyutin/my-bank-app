@@ -1,0 +1,4 @@
+apiVersion: v2
+name: kibana
+description: Kibana [my-bank-app]
+version: 0.1.0

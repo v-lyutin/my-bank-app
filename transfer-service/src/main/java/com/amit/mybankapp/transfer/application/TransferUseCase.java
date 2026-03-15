@@ -6,6 +6,8 @@ import com.amit.mybankapp.commons.client.dto.transfer.CreateTransferRequest;
 import com.amit.mybankapp.commons.client.dto.transfer.CreateTransferResponse;
 import com.amit.mybankapp.transfer.application.exception.TransferExecutionException;
 import com.amit.mybankapp.transfer.infrastructure.provider.CurrentUserProvider;
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,13 +22,17 @@ public class TransferUseCase {
 
     private final CurrentUserProvider currentUserProvider;
 
+    private final MeterRegistry meterRegistry;
+
     @Autowired
     public TransferUseCase(AccountsClient accountsClient,
                            TransferTransactionHandler transferTransactionHandler,
-                           CurrentUserProvider currentUserProvider) {
+                           CurrentUserProvider currentUserProvider,
+                           MeterRegistry meterRegistry) {
         this.accountsClient = accountsClient;
         this.transferTransactionHandler = transferTransactionHandler;
         this.currentUserProvider = currentUserProvider;
+        this.meterRegistry = meterRegistry;
     }
 
     public CreateTransferResponse createTransferWithAudit(CreateTransferRequest request) {
@@ -41,6 +47,7 @@ public class TransferUseCase {
             return this.transferTransactionHandler.onAccepted(transferId, createTransferResponse);
 
         } catch (ApiException exception) {
+            this.recordTransferFailed(currentCustomerId, request.recipientCustomerId());
             this.transferTransactionHandler.onRejected(transferId, currentCustomerId, request);
 
             if (exception.status().is4xxClientError()) {
@@ -49,6 +56,7 @@ public class TransferUseCase {
             throw new TransferExecutionException(transferId, exception);
 
         } catch (RuntimeException exception) {
+            this.recordTransferFailed(currentCustomerId, request.recipientCustomerId());
             this.transferTransactionHandler.onRejected(transferId, currentCustomerId, request);
             throw new TransferExecutionException(transferId, exception);
         }
@@ -56,6 +64,15 @@ public class TransferUseCase {
 
     private static CreateTransferRequest enrichWithSenderCustomerId(UUID currentCustomerId, CreateTransferRequest createTransferRequest) {
         return new CreateTransferRequest(currentCustomerId, createTransferRequest.recipientCustomerId(), createTransferRequest.amount());
+    }
+
+    private void recordTransferFailed(UUID senderId, UUID recipientId) {
+        Counter.builder("mybank.transfer.failed")
+                .description("Number of failed money transfers between users")
+                .tag("sender_login", senderId.toString())
+                .tag("recipient_login", recipientId.toString())
+                .register(this.meterRegistry)
+                .increment();
     }
 
 }

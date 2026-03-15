@@ -2,6 +2,8 @@ package com.amit.mybankapp.cash.application.messaging;
 
 import com.amit.mybankapp.cash.application.messaging.event.WalletOperationCompletedEvent;
 import com.amit.mybankapp.cash.application.messaging.exception.NotificationPublishException;
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
 import org.slf4j.Logger;
@@ -12,6 +14,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 @Component
@@ -29,11 +32,15 @@ public class NotificationsProducer {
 
     private final String topic;
 
+    private final MeterRegistry meterRegistry;
+
     @Autowired
     public NotificationsProducer(KafkaTemplate<String, Object> kafkaTemplate,
-                                 @Value(value = "${mybank.kafka.topics.walletOperationCompleted}") String topic) {
+                                 @Value(value = "${mybank.kafka.topics.walletOperationCompleted}") String topic,
+                                 MeterRegistry meterRegistry) {
         this.kafkaTemplate = kafkaTemplate;
         this.topic = topic;
+        this.meterRegistry = meterRegistry;
     }
 
     public CompletableFuture<Void> send(WalletOperationCompletedEvent event) {
@@ -50,6 +57,7 @@ public class NotificationsProducer {
                 })
                 .whenComplete((result, exception) -> {
                     if (exception != null) {
+                        this.recordNotificationError(event.customerId());
                         Throwable cause = exception.getCause() != null ? exception.getCause() : exception;
 
                         LOGGER.warn("Failed publishing {} (topic={}, operationId={})",
@@ -73,6 +81,15 @@ public class NotificationsProducer {
         producerRecord.headers().add(HEADER_OPERATION_ID, operationId.getBytes(StandardCharsets.UTF_8));
 
         return producerRecord;
+    }
+
+    private void recordNotificationError(UUID customerId) {
+        Counter.builder("mybank.notification.failed")
+                .description("Total number of failed notification deliveries to Kafka")
+                .tag("customer_id", customerId.toString())
+                .tag("service", "cash-service")
+                .register(this.meterRegistry)
+                .increment();
     }
 
 }

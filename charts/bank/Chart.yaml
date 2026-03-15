@@ -1,6 +1,6 @@
 apiVersion: v2
 name: bank
-description: Umbrella chart for My Bank microservices
+description: Umbrella chart for my-bank-app
 type: application
 version: 0.1.0
 
@@ -20,6 +20,31 @@ dependencies:
   - name: kafka
     version: 18.0.1
     repository: "https://helm-charts.itboon.top/kafka"
+
+  - name: zipkin
+    version: 0.1.0
+    repository: "file://../zipkin"
+
+  - name: prometheus
+    version: 0.1.0
+    repository: "file://../prometheus"
+    condition: prometheus.enabled
+
+  - name: grafana
+    version: 1.0.0
+    repository: "file://../grafana"
+
+  - name: elasticsearch
+    version: 0.1.0
+    repository: "file://../elasticsearch"
+
+  - name: logstash
+    version: 0.1.0
+    repository: "file://../logstash"
+
+  - name: kibana
+    version: 0.1.0
+    repository: "file://../kibana"
 
   - name: api-gateway
     version: 0.1.0

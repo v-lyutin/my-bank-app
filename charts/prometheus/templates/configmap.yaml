@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-prometheus-config
+data:
+  prometheus.yml: |
+    global:
+      scrape_interval: {{ .Values.config.scrape_interval }}
+
+    scrape_configs:
+      - job_name: 'my-bank-apps'
+        metrics_path: '/actuator/prometheus'
+        static_configs:
+          - targets:
+            - 'front-controller:8080'
+            - 'accounts-service:8080'
+            - 'cash-service:8080'
+            - 'transfer-service:8080'
+            - 'api-gateway:8080'
+            - 'notifications-service:8080'

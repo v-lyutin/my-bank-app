@@ -1,0 +1,19 @@
+image:
+  repository: prom/prometheus
+  tag: v2.45.0
+
+service:
+  type: NodePort
+  port: 9090
+  nodePort: 30090
+
+config:
+  scrape_interval: 15s
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 200m
+    memory: 256Mi

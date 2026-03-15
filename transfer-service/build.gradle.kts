@@ -22,6 +22,14 @@ dependencies {
 
     runtimeOnly("org.postgresql:postgresql")
 
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
+    implementation("io.micrometer:micrometer-tracing-bridge-brave")
+    implementation("io.zipkin.reporter2:zipkin-reporter-brave")
+
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.testcontainers:postgresql")
+
+    implementation("io.micrometer:micrometer-registry-prometheus")
+
+    implementation("net.logstash.logback:logstash-logback-encoder:7.4")
 }

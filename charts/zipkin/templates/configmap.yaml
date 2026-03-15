@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-zipkin-config
+  labels:
+    app: zipkin
+data:
+  STORAGE_TYPE: {{ .Values.zipkin.storageType | quote }}
+  JAVA_OPTS: {{ .Values.zipkin.javaOpts | quote }}
